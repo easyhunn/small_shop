@@ -1,19 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
+<div class="">
+    <div class="row ">
+        <div class="col-3">
+            @include('layouts.lef-nav')
+        </div>
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    Hello you!
+                    @include('layouts.main-index')
+                    
                 </div>
             </div>
         </div>
