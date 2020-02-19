@@ -26,12 +26,12 @@
 
 <!-- Select Basic -->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="product_type">PRODUCT TYPE</label>
+  <label class="col-md-4 control-label" for="catagory">PRODUCT TYPE</label>
   <div class="col-md-4">
-    <select id="product_type" name="product_type" class="form-control">
+    <select id="catagory_id" name="catagory_id" class="form-control">
         @if(!$catagories->isEmpty())
-            @foreach($catagories as $catagorie)
-              <option value="{{ $catagorie->catagorie }}">{{ $catagorie->catagorie }}</option>
+            @foreach($catagories as $catagory)
+              <option value="{{ $catagory->id }}">{{ $catagory->catagory }}</option>
             @endforeach
         @endif
     </select>
@@ -50,7 +50,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="price $" >Price ($)</label>
   <div class="col-md-4">                     
-    <input id="price" name="price" placeholder="PRICE" class="form-control input-md" required="" type="number" value="{{ old('price') }}">
+    <input id="price" name="price" placeholder="PRICE" class="form-control input-md" required="" type="number" step="0.01" value="{{ old('price') }}">
   </div>
 </div>
 

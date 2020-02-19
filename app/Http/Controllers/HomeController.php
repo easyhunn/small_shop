@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Catagory;
 use App\Product;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\reverse;
 
@@ -26,7 +26,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(4)->reverse();
-        return view('home', compact('products'));
+        $catagories = Catagory::all();
+        $products = Product::where('enable_display',1)->orderBy('id', 'DESC')->paginate(4);
+        return view('home', compact('products', 'catagories'));
     }
 }

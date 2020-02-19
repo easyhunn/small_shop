@@ -17,12 +17,12 @@ class CreateProductsTable extends Migration
             
             $table->bigIncrements('id');
             $table->string('product_name');
-            $table->string('product_type');
+            $table->string('catagory_id');
             $table->string('description');
             $table->integer('stock');
             $table->integer('price');
             $table->unsignedInteger('percentage_discount');
-
+            $table->integer('enable_display');
             $table->string('image_source');
             $table->string('auxiliary_image_source');
 

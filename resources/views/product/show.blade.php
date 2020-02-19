@@ -18,6 +18,7 @@
                         <div class="product-grid">
                             <div class="product-image">
                                 <img class="pic-1" src="{{ asset('storage/'.$product->image_source) }}">
+                                <img class="pic-2" src="{{ asset('storage/'.$product->auxiliary_image_source) }}">
                                 <ul class="social">
                                     <li><a href="" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
                                     <li><a href="" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
@@ -40,13 +41,15 @@
                             </ul>
                             <div class="price">
                                 ${{ (int)(($product->price)*(100 - $product->percentage_discount)/100) }}
-                                <span>${{ $product->price }}</span>
+                                <span><strike>${{ $product->price }}</strike></span>
                             </div>
                             <a class="add-to-cart" href="">+ Add To Cart</a>
                             
                         </div>
-                        @foreach(explode('/n', $product->description) as $detail)
-                        <li>{{ $detail }}</li>
+                        @foreach(preg_split('/[\n]/', $product->description) as $detail)
+                        @if(strlen($detail) > 1)
+                            <li>{{ $detail }}</li>
+                        @endif
                         @endforeach
                     </div>
                 </div>

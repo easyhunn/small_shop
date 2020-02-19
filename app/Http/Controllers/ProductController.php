@@ -45,13 +45,15 @@ class ProductController extends Controller
        
         $data = $request->validate([
             'product_name'      =>  'required',
-            'product_type'      =>  'required',
+            'catagory_id'       =>  'required',
+            'enable_display'    =>  'required',
             'description'        =>  'required',
             'stock'             =>  'required',
             'price'             =>   'required',
             'percentage_discount'  =>  'required|max:100|min:0',
             'image_source'      =>  'required|file|image',
             'auxiliary_image_source'    =>  'required|file|image', 
+            
         ]);
 
         $product = Product::create($data);
@@ -69,7 +71,8 @@ class ProductController extends Controller
     public function show(product $product)
     {
         //
-        return view('product.show', compact('product'));
+        $catagories = Catagory::all();
+        return view('product.show', compact('product', 'catagories'));
     }
 
     /**

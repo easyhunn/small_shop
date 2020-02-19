@@ -31,8 +31,10 @@
                         <li><a href="" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
                         <li><a href="" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
                     </ul>
+                    @if($product->percentage_discount > 0)
                     <span class="product-new-label">Sale</span>
                     <span class="product-discount-label">{{ $product->percentage_discount }}%</span>
+                    @endif
                 </div>
                 <ul class="rating">
                     <li class="fa fa-star"></li>
@@ -44,9 +46,11 @@
                 <div class="product-content">
                     <h3 class="title"><a href="#">{{ $product->product_name }}</a></h3>
                     <div class="price">
-                        ${{ (int)(($product->price)*(100 - $product->percentage_discount)/100) }}
 
-                        <span>${{ $product->price }}</span>
+                        ${{ (int)(($product->price)*(100 - $product->percentage_discount)/100) }}
+                        @if($product->percentage_discount > 0)
+                            <span>${{ $product->price }}</span>
+                        @endif
                     </div>
                     <a class="add-to-cart" href="">+ Add To Cart</a>
                 </div>
