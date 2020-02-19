@@ -21,13 +21,13 @@
             <div class="col-md-3 col-sm-6">
             <div class="product-grid">
                 <div class="product-image">
-                
-                    <a href="#">
+
+                    <a href="{{ route('product.show', $product) }}">
                         <img class="pic-1" src="{{ asset('storage/'.$product->image_source) }}">
                         <img class="pic-2" src="{{ asset('storage/'.$product->auxiliary_image_source) }}">
                     </a>
                     <ul class="social">
-                        <li><a href="" data-tip="Quick View"><i class="fa fa-search"></i></a></li>
+                        <li><a href="{{ route('product.show', $product) }}" data-tip="Quick View"><i class="fa fa-search"></i></a></li>
                         <li><a href="" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
                         <li><a href="" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
                     </ul>
