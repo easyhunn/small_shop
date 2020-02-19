@@ -21,10 +21,10 @@ class CreateProductsTable extends Migration
             $table->string('description');
             $table->integer('stock');
             $table->integer('price');
-            $table->unsignedInteger('discount_percent');
+            $table->unsignedInteger('percentage_discount');
 
             $table->string('image_source');
-            $table->string('auxilary_image_source');
+            $table->string('auxiliary_image_source');
 
             $table->timestamps();
         });

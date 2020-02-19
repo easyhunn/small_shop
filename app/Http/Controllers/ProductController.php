@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Catagory;
 use App\Product;
+use Illuminate\Container\wrap;
+use Illuminate\Contracts\Filesystem\move;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
+use Symfony\Component\HttpFoundation\File\getClientOriginalExtension;
 
 class ProductController extends Controller
 {
@@ -24,8 +30,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $products = Product::all();
-        return view('/product/create', compact('products'));
+        $catagories = Catagory::all();
+        return view('/product/create', compact('catagories'));
     }
 
     /**
@@ -36,18 +42,21 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+       
         $data = $request->validate([
             'product_name'      =>  'required',
             'product_type'      =>  'required',
-            'decription'        =>  'required',
+            'description'        =>  'required',
             'stock'             =>  'required',
             'price'             =>   'required',
-            'discount_percent'  =>  'required|max:100|min:0',
-            'image_source'      =>  'required',
-            'auxiliary_image_source'    =>  'required|file', 
+            'percentage_discount'  =>  'required|max:100|min:0',
+            'image_source'      =>  'required|file|image',
+            'auxiliary_image_source'    =>  'required|file|image', 
         ]);
-        Product::create($data);
-        return redirect('home');
+
+        $product = Product::create($data);
+        $this->storeImage($product);
+        return redirect()->back();
 
     }
 
@@ -94,5 +103,18 @@ class ProductController extends Controller
     public function destroy(product $product)
     {
         //
+    }
+
+    public function storeImage($product) {
+        if(request()->hasFile('image_source')){
+            $product->update([
+                'image_source' => request()->image_source->store('uploads', 'public'),
+                'auxiliary_image_source' => request()->auxiliary_image_source->store('uploads', 'public'),
+            ]);
+            $image = Image::make(public_path('storage/'.$product->image_source))->fit(640,830);
+            $image->save();
+            $auxiliary_image = Image::make(public_path('storage/'.$product->auxiliary_image_source))->fit(640,830);
+            $auxiliary_image->save();
+        }
     }
 }

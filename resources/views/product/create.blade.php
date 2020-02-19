@@ -1,3 +1,4 @@
+<title>create new product</title>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -15,7 +16,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="product_name">PRODUCT NAME</label>  
   <div class="col-md-4">
-  <input id="product_name" name="product_name" placeholder="PRODUCT NAME" class="form-control input-md" required="" type="text">
+  <input id="product_name" name="product_name" placeholder="PRODUCT NAME" class="form-control input-md" required="" type="text" value="{{ old('product_name') }}">
   </div>
   @error('product_name')
     <small class="text-danger">{{ $message }}</small>
@@ -28,12 +29,10 @@
   <label class="col-md-4 control-label" for="product_type">PRODUCT TYPE</label>
   <div class="col-md-4">
     <select id="product_type" name="product_type" class="form-control">
-        <option value="Phone">Phone</option>
-        <option value="Close"></option>
-        @if(!$products->isEmpty())
-        @foreach($products->product_type as $type)
-            <option value="{{ $type }}">{{ $type }}</option>
-        @endforeach
+        @if(!$catagories->isEmpty())
+            @foreach($catagories as $catagorie)
+              <option value="{{ $catagorie->catagorie }}">{{ $catagorie->catagorie }}</option>
+            @endforeach
         @endif
     </select>
   </div>
@@ -43,7 +42,15 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="description">PRODUCT DESCRIPTION</label>
   <div class="col-md-4">                     
-    <textarea class="form-control" id="description" name="description" required></textarea>
+    <textarea class="form-control" id="description" name="description" required>{{ old('description') }}</textarea>
+  </div>
+</div>
+
+<!-- Textarea -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="price $" >Price ($)</label>
+  <div class="col-md-4">                     
+    <input id="price" name="price" placeholder="PRICE" class="form-control input-md" required="" type="number" value="{{ old('price') }}">
   </div>
 </div>
 
@@ -51,7 +58,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="percentage_discount">PERCENTAGE DISCOUNT (%)</label>  
   <div class="col-md-4">
-  <input id="discount_percent" name="percentage_discount" placeholder="PERCENTAGE DISCOUNT" class="form-control input-md" required="" type="text" max ="100">
+  <input id="percentage_discount" name="percentage_discount" placeholder="PERCENTAGE DISCOUNT" class="form-control input-md" required="" type="number" max="100" value="{{ old('percentage_discount') }}">
     
   </div>
 </div>
@@ -60,7 +67,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="stock">STOCK</label>  
   <div class="col-md-4">
-  <input id="stock" name="stock" placeholder="STOCK" class="form-control input-md" required="" type="text">
+  <input id="stock" name="stock" placeholder="STOCK" class="form-control input-md" required="" type="number" value="{{ old('stock') }}">
     
   </div>
 </div>
@@ -83,18 +90,26 @@
     
  <!-- File Button --> 
 <div class="form-group">
-  <label class="col-md-4 control-label" for="filebutton">main_image</label>
+  <label class="col-md-4 control-label" for="image_source">main_image</label>
   <div class="col-md-4">
-    <input id="filebutton" name="filebutton" class="input-file" type="file">
+    <input id="image_source" name="image_source" class="input-file" type="file">
   </div>
+  @error('image_source')
+      <small class="text-danger">{{ $message }}</small>
+  @enderror
 </div>
+
 <!-- File Button --> 
 <div class="form-group">
-  <label class="col-md-4 control-label" for="filebutton">auxiliary_images</label>
+  <label class="col-md-4 control-label" for="auxiliary_image_source">auxiliary_images</label>
   <div class="col-md-4">
-    <input id="filebutton" name="filebutton" class="input-file" type="file">
+    <input id="auxiliary_image_source" name="auxiliary_image_source" class="input-file" type="file">
   </div>
+  @error('auxiliary_image_source')
+      <small class="text-danger">{{ $message }}</small>
+  @enderror
 </div>
+
 
 <!-- Button -->
 <div class="form-group">
@@ -106,3 +121,8 @@
 
 </fieldset>
 </form>
+@if($errors->any())
+  @foreach($errors->all() as $error)
+    <p>{{ $error }}</p>
+  @endforeach
+@endif

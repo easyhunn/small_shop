@@ -80,9 +80,9 @@
             @endif
 
             <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
+                
+                    <img src="{{ asset('storage/'.$product->image_source) }}" alt="avatar" class="img-thumbnail">
+                
 
                 <div class="links">
                     <a href="https://laravel.com/docs">Docs</a>
