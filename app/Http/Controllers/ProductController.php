@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Catagory;
 use App\Product;
+use App\Rating;
 use Illuminate\Container\wrap;
 use Illuminate\Contracts\Filesystem\move;
 use Illuminate\Http\Request;
@@ -72,7 +73,9 @@ class ProductController extends Controller
     {
         //
         $catagories = Catagory::all();
-        return view('product.show', compact('product', 'catagories'));
+        $rating = Rating::where('product_id', $product->id)->get();
+        
+        return view('product.show', compact('product', 'catagories', 'rating'));
     }
 
     /**

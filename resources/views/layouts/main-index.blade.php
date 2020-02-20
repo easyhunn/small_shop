@@ -42,9 +42,10 @@
                     <li class="fa fa-star"></li>
                     <li class="fa fa-star"></li>
                     <li class="fa fa-star disable"></li>
+                    
                 </ul>
                 <div class="product-content">
-                    <h3 class="title"><a href="#">{{ $product->product_name }}</a></h3>
+                    <h3 class="title"><a href="{{ route('product.show', $product) }}">{{ $product->product_name }}</a></h3>
                     <div class="price">
 
                         ${{ (int)(($product->price)*(100 - $product->percentage_discount)/100) }}

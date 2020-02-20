@@ -26,19 +26,78 @@
                                 <span class="product-new-label">Sale</span>
                                 <span class="product-discount-label">{{ $product->percentage_discount }}%</span>
                             </div>
-                            
+                            @php
+                                $avg = 0;
+                                foreach ($rating as $rate) {
+                                    $avg += $rate->value;
+                                }
+                                if($rating->count() > 0) 
+                                    $avg = ($avg/$rating->count());
+                            @endphp
                         </div>
                     </div>
                     <div class="description col-6">
                         <div class="product-content">
                             <h3 class="title"><a href="#">{{ $product->product_name }}</a></h3>
+                            
+                            
                             <ul class="rating">
-                                <li class="fa fa-star"></li>
-                                <li class="fa fa-star"></li>
-                                <li class="fa fa-star"></li>
-                                <li class="fa fa-star"></li>
-                                <li class="fa fa-star disable"></li>
+                                @if($avg == 0)
+                                    @for($i = 0; $i < 5; ++$i)
+                                        <li class="fa fa-star"></li>
+                                    @endfor
+                                @else
+                                @for($i = 0; $i < (int) $avg; ++$i)
+                                    <li class="fa fa-star"></li>
+                                @endfor
+                                @for($i = 0; $i < 5 - (int) $avg; ++$i)
+                                    <li class="fa fa-star disable"></li>
+                                @endfor
+                                @endif
+                                                            
+                                <span class="text-muted">({{ $avg }})</span>
                             </ul>
+            
+                            <form action="{{ route('rating.update', ['product' => $product]) }}" method="POST">
+                                @method('PATCH')
+                                @csrf
+                                
+                                <button class="btn btn-outline-warning btn-sm ml-2" data-toggle="modal" data-target="#exampleModalCenter" type="button">Vote</button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                              
+                                                 @include('layouts.rating')
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Vote</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (session('status'))
+                                <div class="alert alert-danger">
+                                    {{ session('status') }}
+                                </div>
+                                @endif
+                            </form>
+                            
+                            <div>
+                                <small>
+                                    <a href="#" class="font-italic">(there are {{ $rating->count() }} people rating this product)</a>
+                                </small>
+                                
+                            </div>
                             <div class="price">
                                 ${{ (int)(($product->price)*(100 - $product->percentage_discount)/100) }}
                                 <span><strike>${{ $product->price }}</strike></span>
@@ -48,13 +107,15 @@
                         </div>
                         @foreach(preg_split('/[\n]/', $product->description) as $detail)
                         @if(strlen($detail) > 1)
-                            <li>{{ $detail }}</li>
+                        <li>{{ $detail }}</li>
                         @endif
                         @endforeach
                     </div>
-                </div>
+                </div>             
             </div>
+
         </div>
     </div>
 </div>
+
 @endsection

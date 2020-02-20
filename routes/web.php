@@ -28,3 +28,5 @@ Route::post('/Product', 'ProductController@store')->name('product');
 Route::get('/Product/{product}', 'ProductController@show')->name('product.show');
 
 Route::get('/Catagory/{catagory}', 'CatagoryController@show')->name('catagory.show');
+
+Route::patch('/rating/{product}', 'RatingController@update')->name('rating.update');

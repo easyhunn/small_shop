@@ -81,7 +81,7 @@
 
             <div class="content">
                 
-                    <img src="{{ asset('storage/'.$product->image_source) }}" alt="avatar" class="img-thumbnail">
+                
                 
 
                 <div class="links">
