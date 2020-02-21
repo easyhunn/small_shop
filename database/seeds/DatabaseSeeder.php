@@ -13,6 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
         $this->call(CatagorySeeder::class);
-        
+        factory(Comment::class,100)->create();
     }
 }

@@ -15,7 +15,7 @@
             <div class="card">
                 <div class="card-body d-flex justify-content-between">
                     <div class="col-md-6">
-                        <div class="product-grid">
+                        <div class="product-grid" style="height: 500px;">
                             <div class="product-image">
                                 <img class="pic-1" src="{{ asset('storage/'.$product->image_source) }}">
                                 <img class="pic-2" src="{{ asset('storage/'.$product->auxiliary_image_source) }}">
@@ -113,8 +113,11 @@
                     </div>
                 </div>             
             </div>
-
+            <div class="col-12 container mt-5">
+                 @include('layouts.comment')
+            </div>
         </div>
+        
     </div>
 </div>
 

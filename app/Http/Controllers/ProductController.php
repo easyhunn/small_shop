@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Catagory;
+use App\Comment;
 use App\Product;
 use App\Rating;
 use Illuminate\Container\wrap;
@@ -74,8 +75,8 @@ class ProductController extends Controller
         //
         $catagories = Catagory::all();
         $rating = Rating::where('product_id', $product->id)->get();
-        
-        return view('product.show', compact('product', 'catagories', 'rating'));
+        $comments = Comment::where('product_id', $product->id)->orderBy('id', 'DESC')->paginate(4);
+        return view('product.show', compact('product', 'catagories', 'rating', 'comments'));
     }
 
     /**

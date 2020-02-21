@@ -30,3 +30,6 @@ Route::get('/Product/{product}', 'ProductController@show')->name('product.show')
 Route::get('/Catagory/{catagory}', 'CatagoryController@show')->name('catagory.show');
 
 Route::patch('/rating/{product}', 'RatingController@update')->name('rating.update');
+
+Route::get('/Comment/create', 'CommentController@create')->name('comment.create');
+Route::delete('/Comment/{comment}', 'CommentController@destroy')->name('comment.destroy');
