@@ -32,4 +32,13 @@ class CommentController extends Controller
     	$comment->delete();
     	return redirect()->back();
     }
+
+    public function update (Comment $comment) {
+    	$data = request()->validate(['comments_update' => 'required',]);
+    	
+    	$comment->update([
+    		'comments' => $data['comments_update'][0],
+    	]);
+    	return redirect()->back();
+    }
 }

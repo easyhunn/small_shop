@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Product;
 use App\Rating;
-use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Request;
 
 class RatingController extends Controller
 {
@@ -72,7 +73,10 @@ class RatingController extends Controller
     public function update(Request $request, Product $product)
     {
         //
-        $data = $request->validate(['rating' => 'required|max:5|min:1']);
+        $data = $request->validate([
+            'rating' => 'required|max:5|min:1'
+            'comments' => 'required',
+        ]);
         if(!Auth::check()) {
             return redirect()->back()->with('status','please login before rating');
         }
@@ -89,6 +93,11 @@ class RatingController extends Controller
                 'user_id' => Auth::user()->id,
                 'product_id'=> $product->id,
                 'value' => $request->rating,
+            ]);
+            Comment::create([
+                'user_id' => Auth::user()->id,
+                'product_id'=> $product->id,
+                'comments' => $request->comments,
             ]);
         }   
         return redirect()->back();

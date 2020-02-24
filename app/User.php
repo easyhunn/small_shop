@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Comment;
+use App\Rating;
 use App\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -37,7 +39,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    function products() {
-        return $this->belongsToMany(User::class);
+    
+    function comments() {
+        return $this->hasMany(Comment::class);
+    }
+    function rates() {
+        return $this->hasMany(Rating::class);
     }
 }

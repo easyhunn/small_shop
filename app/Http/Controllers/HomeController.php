@@ -6,6 +6,7 @@ use App\Catagory;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\reverse;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -26,6 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        
         $catagories = Catagory::all();
         $products = Product::where('enable_display',1)->orderBy('id', 'DESC')->paginate(4);
         return view('home', compact('products', 'catagories'));

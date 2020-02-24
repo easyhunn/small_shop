@@ -16,6 +16,9 @@
       <input type="radio" id="star1" name="rating" value="1"  onClick="myRating(1)"/><label for="star1" title="very bad">1 star</label>
     </div>
   </div>
+  <div class="col-12">
+     <input class="form-control border-0 border-bottom" type="text" required name="comments" placeholder="please enter your comments...">
+  </div>
 </div>
   <script>
   document.getElementById('start').innerHTML =  "it still working";

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\File\getClientOriginalExtension;
+use Auth;
 
 class ProductController extends Controller
 {
@@ -73,6 +74,7 @@ class ProductController extends Controller
     public function show(product $product)
     {
         //
+        
         $catagories = Catagory::all();
         $rating = Rating::where('product_id', $product->id)->get();
         $comments = Comment::where('product_id', $product->id)->orderBy('id', 'DESC')->paginate(4);

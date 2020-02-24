@@ -22,11 +22,25 @@
 </form>
 <div class="container mt-5">
 	
-	@foreach($comments as $comment)
+	@foreach($comments as $key => $comment)
 		<div class="col-12 card mt-3">
 			<div class="card-header">
 				{{ $comment->user->name }}
-				<small class="text-muted">(<span class="font-italic">created at: </span>{{ $comment->created_at }})</small>
+				<small class="text-muted">(<span class="font-italic">created at: </span>{{ $comment->created_at }})
+				</small>
+				<!--vote-->
+				@if($comment->getVote() > 0)
+					<div>
+						<ul class="rating">
+							@for($i = 0; $i < $comment->getVote(); ++$i)
+								<li class="fa fa-star"></li>
+							@endfor
+							@for($i = 0; $i < 5 - $comment->getVote(); ++$i)
+								<li class="fa fa-star disable"></li>
+							@endfor
+						</ul>
+					</div>
+				@endif
 			</div>
 			<div class="card-body">
 				
@@ -34,17 +48,45 @@
 					<div>{{ $line }}</div>
 				@endforeach
 			</div>
-			@can('delete', $comment)
+			<!--button-->
 			<div class="col-12">
-				<form action="{{ route('comment.destroy', compact('comment')) }}" method="post">
-					@method('delete')
-					@csrf
-					<button class="btn-sm btn-outline-danger float-right">Delete</button>
-				</form>
+				@can('delete', $comment)
+				<div >
+					<form action="{{ route('comment.destroy', compact('comment')) }}" method="post">
+						@method('delete')
+						@csrf
+						<button class="float-right">Delete</button>
+					</form>
+				</div>
+				@endcan
+				@can('update', $comment)
+				<div class="">
+
+					<form action="{{ route('comment.update', compact('comment')) }}" method="post">
+						@method('patch')
+						@csrf
+						
+						<button type="button" class=" float-right" onclick="showCommentsUpdateInput({{ $key }})" name = "update_button">edit</button>
+						<input type="text" name="comments_update[]" hidden class="form-control">
+					</form>
+
+				</div>
+				@endcan
 			</div>
-			@endcan
+
 		</div> 
 		
 	@endforeach
 	<div class="col-12 mt-3">{{ $comments->links() }}</div>
 </div>
+
+<script>
+
+	
+	function showCommentsUpdateInput (index) {
+		let commentsUpdateInput = document.getElementsByName("comments_update[]")[index];
+		let update_button = document.getElementsByName("update_button")[index];
+		commentsUpdateInput.removeAttribute("hidden");
+		update_button.setAttribute("hidden","true");
+	}
+</script>

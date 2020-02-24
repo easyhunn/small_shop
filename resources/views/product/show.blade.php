@@ -27,12 +27,12 @@
                                 <span class="product-discount-label">{{ $product->percentage_discount }}%</span>
                             </div>
                             @php
-                                $avg = 0;
-                                foreach ($rating as $rate) {
-                                    $avg += $rate->value;
-                                }
-                                if($rating->count() > 0) 
-                                    $avg = ($avg/$rating->count());
+                            $avg = 0;
+                            foreach ($rating as $rate) {
+                            $avg += $rate->value;
+                            }
+                            if($rating->count() > 0)
+                            $avg = ($avg/$rating->count());
                             @endphp
                         </div>
                     </div>
@@ -43,59 +43,55 @@
                             
                             <ul class="rating">
                                 @if($avg == 0)
-                                    @for($i = 0; $i < 5; ++$i)
-                                        <li class="fa fa-star"></li>
-                                    @endfor
+                                @for($i = 0; $i < 5; ++$i)
+                                <li class="fa fa-star"></li>
+                                @endfor
                                 @else
                                 @for($i = 0; $i < (int) $avg; ++$i)
-                                    <li class="fa fa-star"></li>
+                                <li class="fa fa-star"></li>
                                 @endfor
                                 @for($i = 0; $i < 5 - (int) $avg; ++$i)
-                                    <li class="fa fa-star disable"></li>
+                                <li class="fa fa-star disable"></li>
                                 @endfor
                                 @endif
-                                                            
+                                
                                 <span class="text-muted">({{ $avg }})</span>
                             </ul>
-            
-                            <form action="{{ route('rating.update', ['product' => $product]) }}" method="POST">
-                                @method('PATCH')
-                                @csrf
-                                
-                                <button class="btn btn-outline-warning btn-sm ml-2" data-toggle="modal" data-target="#exampleModalCenter" type="button">Vote</button>
+                            
+                            @if(Auth::check())
+                                @include('layouts.vote-button')
+                            @endif
+                            
+                            <div>
+                                <small>
+                                <a href="#" class="font-italic" data-toggle="modal" data-target="#voter">(there are {{ $rating->count() }} people rating this product)</a>
+                                </small>
+                                <!-- Button trigger modal -->
                                 <!-- Modal -->
-                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal fade" id="voter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                                <h5 class="modal-title" id="exampleModalLongTitle">All 
+                                                {{ $rating->count() }}</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                              
-                                                 @include('layouts.rating')
-
+                                                @foreach($rating as $rate)
+                                                <div>
+                                                    <a href="#">{{ $rate->user->name }} ({{ $rate->value }})</a>
+                                                </div>
+                                                @endforeach
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Vote</button>
+                                                <button type="button" class="btn btn-primary">Save changes</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @if (session('status'))
-                                <div class="alert alert-danger">
-                                    {{ session('status') }}
-                                </div>
-                                @endif
-                            </form>
-                            
-                            <div>
-                                <small>
-                                    <a href="#" class="font-italic">(there are {{ $rating->count() }} people rating this product)</a>
-                                </small>
                                 
                             </div>
                             <div class="price">
@@ -111,14 +107,13 @@
                         @endif
                         @endforeach
                     </div>
-                </div>             
+                </div>
             </div>
             <div class="col-12 container mt-5">
-                 @include('layouts.comment')
+                @include('layouts.comment')
             </div>
         </div>
         
     </div>
 </div>
-
 @endsection
