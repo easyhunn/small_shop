@@ -74,7 +74,7 @@ class RatingController extends Controller
     {
         //
         $data = $request->validate([
-            'rating' => 'required|max:5|min:1'
+            'rating' => 'required|max:5|min:1',
             'comments' => 'required',
         ]);
         if(!Auth::check()) {

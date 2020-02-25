@@ -41,4 +41,41 @@ class CommentController extends Controller
     	]);
     	return redirect()->back();
     }
+
+    public function like (Comment $comment) {
+
+    	$isLike = optional($comment->likes()->where('user_id', Auth::user()->id))->first();
+    	$liked = 0; //status seft like
+
+    	if (optional($isLike)->like) {
+    		if($isLike->like === 1) {
+
+    			$isLike->like = 0;
+    			$isLike->save();   		
+    			$liked = 0;			
+    		} else {
+    			$isLike->like = 1;
+    			$isLike->save(); 
+    		}
+    	} else {
+    		//0 know as null so use '0' instead 
+    		if(optional($isLike)->like == '0') {
+    			$isLike->like = 1;
+    			$isLike->save(); 	
+    		} else {
+	    		$comment->likes()->create([
+	    			'user_id' => Auth::user()->id,
+	    			'comment_id' => $comment->id,
+	    			'like' => '1',
+	    		]);
+    		}
+    		$liked = 1;	
+    	}
+
+    	return response()->json([
+		    'like' => $comment->likes()->where('user_id', Auth::user()->id)->first()->like,
+		    'isLiked' => $liked,
+		]);
+
+    }
 }

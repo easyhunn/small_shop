@@ -34,3 +34,7 @@ Route::patch('/rating/{product}', 'RatingController@update')->name('rating.updat
 Route::get('/Comment/create', 'CommentController@create')->name('comment.create');
 Route::delete('/Comment/{comment}', 'CommentController@destroy')->name('comment.destroy');
 Route::patch('/Comment/{comment}', 'CommentController@update')->name('comment.update');
+Route::post('/Comment/{comment}/like', 'CommentController@like')->name('comment.like');
+
+Route::post('/Comment/{comment}/store', 'ReplyController@store')->name('reply.store');
+

@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Comment;
+use App\Like;
 use App\Rating;
+use App\Reply;
 use App\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -45,5 +47,11 @@ class User extends Authenticatable
     }
     function rates() {
         return $this->hasMany(Rating::class);
+    }
+    function replies() {
+        return $this->hasMany(Reply::class);
+    }
+    function likes() {
+        return $this->hasMany(Like::class);
     }
 }

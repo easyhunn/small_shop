@@ -21,7 +21,7 @@
   </div>
 </div>
   <script>
-  document.getElementById('start').innerHTML =  "it still working";
+
   function myRating(value) {
   document.getElementById('start').innerHTML = value + "/5";
   }

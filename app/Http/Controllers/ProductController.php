@@ -77,7 +77,9 @@ class ProductController extends Controller
         
         $catagories = Catagory::all();
         $rating = Rating::where('product_id', $product->id)->get();
-        $comments = Comment::where('product_id', $product->id)->orderBy('id', 'DESC')->paginate(4);
+        $comments = Comment::where('product_id', $product->id)->orderBy('id', 'DESC')->with('user','replies')->paginate(4);
+        //$comments->setRelation('replies', $comments->replies()->paginate(2));
+
         return view('product.show', compact('product', 'catagories', 'rating', 'comments'));
     }
 

@@ -2,91 +2,159 @@
 <form action="{{ route('comment.create') }}" method="get">
 	
 	<textarea placeholder="write your comments..." name="comments" id="comments" cols="30" rows="5" class="form-control">
-
 	</textarea>
 	@error('comments')
-		<small class="text-danger">{{ $message }}</small>
+	<small class="text-danger">{{ $message }}</small>
 	@enderror
 	<input type="hidden" name="product_id" value="{{ $product->id }}">
 	
 	@if(Auth::check())
 	<button type="submit" class="btn btn-info mt-1">Share</button>
 	@else
-	<small><a href="{{ route('login') }}" class="text-danger">please login to comments...</a></small> 
+	<small><a href="{{ route('login') }}" class="text-danger">please login to comments...</a></small>
 	@endif
 	@if($errors->any())
-		@foreach($errors->all() as $error)
-			{{ $error }}
-		@endforeach
+	@foreach($errors->all() as $error)
+	{{ $error }}
+	@endforeach
 	@endif
 </form>
 <div class="container mt-5">
 	
 	@foreach($comments as $key => $comment)
-		<div class="col-12 card mt-3">
-			<div class="card-header">
-				{{ $comment->user->name }}
-				<small class="text-muted">(<span class="font-italic">created at: </span>{{ $comment->created_at }})
-				</small>
-				<!--vote-->
-				@if($comment->getVote() > 0)
-					<div>
-						<ul class="rating">
-							@for($i = 0; $i < $comment->getVote(); ++$i)
-								<li class="fa fa-star"></li>
-							@endfor
-							@for($i = 0; $i < 5 - $comment->getVote(); ++$i)
-								<li class="fa fa-star disable"></li>
-							@endfor
-						</ul>
-					</div>
-				@endif
+	<div class="col-12 card mt-3">
+		<div class="card-header">
+			{{ $comment->user->name }}
+			<small class="text-muted">(<span class="font-italic">created at: </span>{{ $comment->created_at }})
+			</small>
+			<!--vote-->
+			@if($comment->getVote() > 0)
+			<div>
+				<ul class="rating">
+					@for($i = 0; $i < $comment->getVote(); ++$i)
+					<li class="fa fa-star"></li>
+					@endfor
+					@for($i = 0; $i < 5 - $comment->getVote(); ++$i)
+					<li class="fa fa-star disable"></li>
+					@endfor
+				</ul>
 			</div>
-			<div class="card-body">
+			@endif
+		</div>
+		<div class="card-body">
+			
+			@foreach(preg_split('/[\n]/',$comment->comments) as $line)
+			<div>{{ $line }}</div>
+			@endforeach
+		</div>
+		<!--button group-->
+		<div class="col-12">
+			@can('delete', $comment)
+			<div >
+				<form action="{{ route('comment.destroy', compact('comment')) }}" method="post">
+					@method('delete')
+					@csrf
+					<button class="float-right">Delete</button>
+				</form>
+			</div>
+			@endcan
+			@can('update', $comment)
+			<div class="">
+				<form action="{{ route('comment.update', compact('comment')) }}" method="post">
+					@method('patch')
+					@csrf
+					
+					<button type="button" class=" float-right" onclick="showHide({{ $key }}, 'editBox', 'update_button')" name = "update_button">edit</button>
+					
+				</form>
+			</div>
+			@endcan
+			@if(Auth::check())
+			<button type="button" class=" float-right" onclick="showHide({{ $key }},'reply_box','reply_button')" name = "reply_button">reply</button>
+			@endif
+			<div class="">
+				<button class="border-0 col-sm-2" onclick="like({{ $comment->id }}, {{ $key }})" >
+					@if(!$comment->liked())
+					<i  class="fa fa-thumbs-up" name="like_contain" style="font-size: 20px;" aria-hidden="true"> 
+						like {{ $comment->likes()->where('like',1)->count() }}
+					</i>
+					@else
+					<i  class="fa fa-thumbs-up" name="like_contain" style="font-size: 20px; color: #3399FF;" aria-hidden="true"> 
+						like {{ $comment->likes()->where('like',1)->count() }}
+					</i>
+					@endif
+				</button>	
 				
-				@foreach(preg_split('/[\n]/',$comment->comments) as $line)
-					<div>{{ $line }}</div>
-				@endforeach
 			</div>
-			<!--button-->
-			<div class="col-12">
-				@can('delete', $comment)
-				<div >
-					<form action="{{ route('comment.destroy', compact('comment')) }}" method="post">
-						@method('delete')
-						@csrf
-						<button class="float-right">Delete</button>
-					</form>
-				</div>
-				@endcan
-				@can('update', $comment)
-				<div class="">
-
-					<form action="{{ route('comment.update', compact('comment')) }}" method="post">
-						@method('patch')
-						@csrf
-						
-						<button type="button" class=" float-right" onclick="showCommentsUpdateInput({{ $key }})" name = "update_button">edit</button>
-						<input type="text" name="comments_update[]" hidden class="form-control">
-					</form>
-
-				</div>
-				@endcan
-			</div>
-
-		</div> 
+		</div>
 		
+		<!--end button group-->
+		<div name="editBox" hidden="true">
+			<input type="text" name="comments_update[]" class="form-control col-8">
+			<a href="javascript:void(0);" onclick="showHide({{ $key }}, 'update_button', 'editBox')">Cancel</a>
+		</div>
+		
+	</div>
+	<div class="mt-1">
+		<!--input box for replies-->
+		<form action="{{ route('reply.store', compact('comment')) }}" method="post">
+			@csrf
+			
+			<input type="text" name="reply_box" hidden class="form-control" placeholder="write your replies...">
+		</form>
+	</div>
+	@if($comment->replies()->count() > 0)
+	<a href="javascript:void(0);" onclick="showHide({{ $key }}, 'replies','viewMoreReplies')" name="viewMoreReplies">view more {{ $comment->replies()->count() }} reply</a>
+	@else
+	<a href="javascript:void(0);" hidden name="viewMoreReplies">view more {{ $comment->replies()->count() }} reply</a>
+	@endif
+
+	<div class="container ml-5 small col-11 mt-3" name="replies" hidden>
+		<!--paginate -->
+		
+		@foreach($comment->replies()->get() as $replyKey => $reply)
+		@include('layouts.reply')
+		
+		@endforeach
+		<a href="javascript:void(0);" onclick="showHide({{ $key }}, 'viewMoreReplies','replies')" >View less</a>
+	</div>
+
+	
 	@endforeach
 	<div class="col-12 mt-3">{{ $comments->links() }}</div>
 </div>
-
 <script>
+	function showHide(index, showName, hideName) {
+		try {
+		let showElement = document.getElementsByName(showName)[index];
+		let hideElement = document.getElementsByName(hideName)[index];
+		showElement.removeAttribute("hidden");
+		hideElement.setAttribute("hidden","true");
+		} catch (e) {
+			document.write(e);
+		}
+	}
 
-	
-	function showCommentsUpdateInput (index) {
-		let commentsUpdateInput = document.getElementsByName("comments_update[]")[index];
-		let update_button = document.getElementsByName("update_button")[index];
-		commentsUpdateInput.removeAttribute("hidden");
-		update_button.setAttribute("hidden","true");
+	//like request
+	function like (comment, index) {
+		$.ajax({
+            url: '/Comment/'+comment+'/like',
+            type: 'POST',
+            data: {
+            	"_token": "{{ csrf_token() }}"
+        	},
+            success: function (result) {
+            	let like = document.getElementsByName("like_contain")[index];
+            	like.innerHTML = " like " + result.like;
+            	if(result.isLiked == 1) {
+            		like.style.color = "#3399FF";
+            	} else {
+            		like.style.color = "black";
+            	}
+            },
+            error: function(xhr, status, error) {
+			  	alert(status);
+			}
+        });
 	}
 </script>
