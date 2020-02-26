@@ -16,7 +16,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 
-                                                @include('layouts.rating')
+                                                @include('product.layouts.rating')
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -22,12 +22,12 @@
             <div class="product-grid">
                 <div class="product-image">
 
-                    <a href="{{ route('product.show', $product) }}">
+                    <a href="{{ $product->public_path() }}">
                         <img class="pic-1" src="{{ asset('storage/'.$product->image_source) }}">
                         <img class="pic-2" src="{{ asset('storage/'.$product->auxiliary_image_source) }}">
                     </a>
                     <ul class="social">
-                        <li><a href="{{ route('product.show', $product) }}" data-tip="Quick View"><i class="fa fa-search"></i></a></li>
+                        <li><a href="{{ $product->public_path() }}" data-tip="Quick View"><i class="fa fa-search"></i></a></li>
                         <li><a href="" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
                         <li><a href="" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
                     </ul>
@@ -45,7 +45,7 @@
                     
                 </ul>
                 <div class="product-content">
-                    <h3 class="title"><a href="{{ route('product.show', $product) }}">{{ $product->product_name }}</a></h3>
+                    <h3 class="title"><a href="{{ $product->public_path()}}">{{ $product->product_name }}</a></h3>
                     <div class="price">
 
                         ${{ (int)(($product->price)*(100 - $product->percentage_discount)/100) }}

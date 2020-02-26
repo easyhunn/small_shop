@@ -41,4 +41,8 @@ class Comment extends Model
    		}
     }
 
+    public function edited () {
+    	return optional($this->created_at) != optional($this->updated_at);
+    }
+
 }

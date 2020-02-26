@@ -27,7 +27,10 @@
 			{{ $comment->user->name }}
 			<small class="text-muted">(<span class="font-italic">created at: </span>{{ $comment->created_at }})
 			</small>
-			<span id="changed{{ $key }}"></span>
+
+			@if($comment->edited())
+			 	<span id="changed{{ $key }}" class="text-muted">edited</span>
+			@endif
 			<!--vote-->
 			@if($comment->getVote() > 0)
 			<div>
@@ -89,8 +92,9 @@
 			
 			
 			<input type="text" id="commentUpdate{{ $key }}" style="width:300px;">
-			<button id="saveChange{{ $key }}" onclick = "editFunction({{ $comment->id }}, {{ $key }});">change</button>
-			<a href="javascript:void(0);" onclick="showHide('update_button{{ $key }}', 'editBox{{ $key }}')">Cancel</a>			
+			<button id="saveChange{{ $key }}" onclick = "editFunction({{ $comment->id }}, {{ $key }});">save change</button>
+			<button onclick="showHide('update_button{{ $key }}', 'editBox{{ $key }}')">Cancel</button>
+			
 			
 			
 		</div>
@@ -114,7 +118,7 @@
 		<!--paginate -->
 		
 		@foreach($comment->replies()->get() as $replyKey => $reply)
-		@include('layouts.reply')
+		@include('product.layouts.reply')
 		
 		@endforeach
 		<a href="javascript:void(0);" onclick="showHide('viewMoreReplies{{ $key }}','replies{{ $key }}')" >View less</a>

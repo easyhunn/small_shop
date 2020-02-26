@@ -59,7 +59,7 @@
                             </ul>
                             
                             @if(Auth::check())
-                                @include('layouts.vote-button')
+                                @include('product.layouts.vote-button')
                             @endif
                             
                             <div>
@@ -110,7 +110,7 @@
                 </div>
             </div>
             <div class="col-12 container mt-5">
-                @include('layouts.comment')
+                @include('product.layouts.comment')
             </div>
         </div>
         

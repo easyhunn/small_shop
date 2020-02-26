@@ -22,6 +22,7 @@
 </div>
   <script>
 
+
   function myRating(value) {
   document.getElementById('start').innerHTML = value + "/5";
   }
