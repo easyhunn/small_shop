@@ -34,12 +34,15 @@ class CommentController extends Controller
     }
 
     public function update (Comment $comment) {
+
     	$data = request()->validate(['comments_update' => 'required',]);
     	
     	$comment->update([
-    		'comments' => $data['comments_update'][0],
+    		'comments' => $data['comments_update'],
     	]);
-    	return redirect()->back();
+    	return response()->json([
+    		'status' => 'success'
+    	]);
     }
 
     public function like (Comment $comment) {
@@ -73,8 +76,9 @@ class CommentController extends Controller
     	}
 
     	return response()->json([
-		    'like' => $comment->likes()->where('user_id', Auth::user()->id)->first()->like,
+		    'like' => $comment->likes()->where('like', 1)->count(),
 		    'isLiked' => $liked,
+		    'comments' => Comment::all()->toJson(),
 		]);
 
     }

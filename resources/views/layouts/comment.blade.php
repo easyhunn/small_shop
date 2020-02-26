@@ -27,6 +27,7 @@
 			{{ $comment->user->name }}
 			<small class="text-muted">(<span class="font-italic">created at: </span>{{ $comment->created_at }})
 			</small>
+			<span id="changed{{ $key }}"></span>
 			<!--vote-->
 			@if($comment->getVote() > 0)
 			<div>
@@ -41,7 +42,7 @@
 			</div>
 			@endif
 		</div>
-		<div class="card-body">
+		<div class="card-body" id="cardBody{{ $key }}" }}>
 			
 			@foreach(preg_split('/[\n]/',$comment->comments) as $line)
 			<div>{{ $line }}</div>
@@ -60,17 +61,12 @@
 			@endcan
 			@can('update', $comment)
 			<div class="">
-				<form action="{{ route('comment.update', compact('comment')) }}" method="post">
-					@method('patch')
-					@csrf
-					
-					<button type="button" class=" float-right" onclick="showHide({{ $key }}, 'editBox', 'update_button')" name = "update_button">edit</button>
-					
-				</form>
+				<button type="button" class=" float-right" onclick="showHide('editBox{{ $key }}', 'update_button{{ $key }}')" name = "update_button" id="update_button{{ $key }}">edit</button>
+				
 			</div>
 			@endcan
 			@if(Auth::check())
-			<button type="button" class=" float-right" onclick="showHide({{ $key }},'reply_box','reply_button')" name = "reply_button">reply</button>
+			<button type="button" class=" float-right" onclick="showHide('reply_box{{ $key }}','reply_button{{ $key }}')" name = "reply_button" id="reply_button{{ $key }}">reply</button>
 			@endif
 			<div class="">
 				<button class="border-0 col-sm-2" onclick="like({{ $comment->id }}, {{ $key }})" >
@@ -89,9 +85,14 @@
 		</div>
 		
 		<!--end button group-->
-		<div name="editBox" hidden="true">
-			<input type="text" name="comments_update[]" class="form-control col-8">
-			<a href="javascript:void(0);" onclick="showHide({{ $key }}, 'update_button', 'editBox')">Cancel</a>
+		<div name="editBox" hidden="true" id = "editBox{{ $key }}">
+			
+			
+			<input type="text" id="commentUpdate{{ $key }}" style="width:300px;">
+			<button id="saveChange{{ $key }}" onclick = "editFunction({{ $comment->id }}, {{ $key }});">change</button>
+			<a href="javascript:void(0);" onclick="showHide('update_button{{ $key }}', 'editBox{{ $key }}')">Cancel</a>			
+			
+			
 		</div>
 		
 	</div>
@@ -100,23 +101,23 @@
 		<form action="{{ route('reply.store', compact('comment')) }}" method="post">
 			@csrf
 			
-			<input type="text" name="reply_box" hidden class="form-control" placeholder="write your replies...">
+			<input type="text" name="reply_box" id="reply_box{{ $key }}" hidden class="form-control" placeholder="write your replies...">
 		</form>
 	</div>
 	@if($comment->replies()->count() > 0)
-	<a href="javascript:void(0);" onclick="showHide({{ $key }}, 'replies','viewMoreReplies')" name="viewMoreReplies">view more {{ $comment->replies()->count() }} reply</a>
+	<a href="javascript:void(0);" onclick="showHide('replies{{ $key }}','viewMoreReplies{{ $key }}')" name="viewMoreReplies" id="viewMoreReplies{{ $key }}">view more {{ $comment->replies()->count() }} reply</a>
 	@else
 	<a href="javascript:void(0);" hidden name="viewMoreReplies">view more {{ $comment->replies()->count() }} reply</a>
 	@endif
 
-	<div class="container ml-5 small col-11 mt-3" name="replies" hidden>
+	<div class="container ml-5 small col-11 mt-3" name="replies" id="replies{{ $key }}" hidden>
 		<!--paginate -->
 		
 		@foreach($comment->replies()->get() as $replyKey => $reply)
 		@include('layouts.reply')
 		
 		@endforeach
-		<a href="javascript:void(0);" onclick="showHide({{ $key }}, 'viewMoreReplies','replies')" >View less</a>
+		<a href="javascript:void(0);" onclick="showHide('viewMoreReplies{{ $key }}','replies{{ $key }}')" >View less</a>
 	</div>
 
 	
@@ -124,15 +125,12 @@
 	<div class="col-12 mt-3">{{ $comments->links() }}</div>
 </div>
 <script>
-	function showHide(index, showName, hideName) {
-		try {
-		let showElement = document.getElementsByName(showName)[index];
-		let hideElement = document.getElementsByName(hideName)[index];
+
+	function showHide (showId, hideId) {
+		let showElement = document.getElementById(showId);
+		let hideElement = document.getElementById(hideId);
 		showElement.removeAttribute("hidden");
 		hideElement.setAttribute("hidden","true");
-		} catch (e) {
-			document.write(e);
-		}
 	}
 
 	//like request
@@ -151,10 +149,31 @@
             	} else {
             		like.style.color = "black";
             	}
+
             },
             error: function(xhr, status, error) {
-			  	alert(status);
+			  	alert("please login to likes");
 			}
         });
+	}
+	function editFunction(comment, index) {
+		let comments_update = document.getElementById("commentUpdate"+index).value;
+		$.ajax({
+			url: '/Comment/' + comment,
+			type: 'patch',
+			data: {
+				"_token": "{{ csrf_token() }}",
+				"comments_update": comments_update, 
+			},
+			success: function(result) {
+				document.getElementById("cardBody"+index).innerHTML = comments_update;
+				
+			},
+			error: function (result) {
+				alert("error" + result.status);
+			}
+
+		});
+		
 	}
 </script>

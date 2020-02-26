@@ -32,11 +32,13 @@ class Comment extends Model
     }
 
     public function liked() {
-    	if(optional($this->likes()->where('user_id',Auth::user()->id)->first())->like == 1) {
-    		return true;
-    	} else {
-    		return false;
-    	}
+    	if (Auth::check()) {
+	    	if(optional($this->likes()->where('user_id',Auth::user()->id)->first())->like == 1) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+   		}
     }
 
 }
