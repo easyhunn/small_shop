@@ -30,7 +30,9 @@ class CommentController extends Controller
     public function destroy (Comment $comment) {
     	$this->authorize('delete', $comment);
     	$comment->delete();
-    	return redirect()->back();
+    	return response()->json([
+    		'status' => 'success',
+    	]);
     }
 
     public function update (Comment $comment) {

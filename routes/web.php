@@ -37,4 +37,5 @@ Route::patch('/Comment/{comment}', 'CommentController@update')->name('comment.up
 Route::post('/Comment/{comment}/like', 'CommentController@like')->name('comment.like');
 
 Route::post('/Comment/{comment}/store', 'ReplyController@store')->name('reply.store');
+Route::delete('/reply/{reply}', 'ReplyController@destroy')->name('reply.destroy');
 

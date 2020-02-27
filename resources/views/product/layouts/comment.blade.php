@@ -22,7 +22,7 @@
 <div class="container mt-5">
 	
 	@foreach($comments as $key => $comment)
-	<div class="col-12 card mt-3">
+	<div class="col-12 card mt-3" id="content{{ $key }}">
 		<div class="card-header">
 			{{ $comment->user->name }}
 			<small class="text-muted">(<span class="font-italic">created at: </span>{{ $comment->created_at }})
@@ -55,11 +55,8 @@
 		<div class="col-12">
 			@can('delete', $comment)
 			<div >
-				<form action="{{ route('comment.destroy', compact('comment')) }}" method="post">
-					@method('delete')
-					@csrf
-					<button class="float-right">Delete</button>
-				</form>
+				<button class="float-right" onclick="deleteComment({{ $comment->id }}, {{ $key }});">Delete</button>
+				
 			</div>
 			@endcan
 			@can('update', $comment)
@@ -139,6 +136,7 @@
 
 	//like request
 	function like (comment, index) {
+
 		$.ajax({
             url: '/Comment/'+comment+'/like',
             type: 'POST',
@@ -179,5 +177,30 @@
 
 		});
 		
+	}
+
+	function deleteComment(comment, index) {
+		
+		$.ajax({
+			url:'/Comment/'+comment,
+			type:'delete',
+			data: {
+				"_token": "{{ csrf_token() }}"
+			
+			},
+			success: function (result) {
+				try{
+					let x = document.getElementById("content"+index);
+					x.parentNode.removeChild(x);
+				} catch (e) {
+					
+				}
+
+			},
+			error: function (result) {
+				alert(result.status);
+			}
+
+		});
 	}
 </script>

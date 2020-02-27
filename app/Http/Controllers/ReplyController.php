@@ -97,7 +97,10 @@ class ReplyController extends Controller
     public function destroy(Reply $reply)
     {
         //
+        $this->authorize('delete', $reply);
         $reply->delete();
-        
+        return response()->json([
+            'status' => 'success',
+        ]);
     }
 }
