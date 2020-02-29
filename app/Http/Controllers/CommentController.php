@@ -10,20 +10,12 @@ class CommentController extends Controller
 {
     //
     public function create () {
+    	$this->requiredLogin();
     	$data = request()->validate([
     		'comments' => 'required',
     		'product_id' => 'required',
-    	]);
-
-    	if(!Auth::check()) {
-    		return redirect()->back();
-    	}
-    	Comment::create([
-    		'user_id' => auth()->user()->id,
-    		'product_id' => $data['product_id'],
-    		'comments' 	=> $data['comments'],
-    	]);
-    	
+    	]);   	
+    	$this->_create($data['product_id'], $data['comments']);
     	return redirect()->back();
     }
 
@@ -36,9 +28,7 @@ class CommentController extends Controller
     }
 
     public function update (Comment $comment) {
-
-    	$data = request()->validate(['comments_update' => 'required',]);
-    	
+    	$data = request()->validate(['comments_update' => 'required',]);  	
     	$comment->update([
     		'comments' => $data['comments_update'],
     	]);
@@ -51,17 +41,10 @@ class CommentController extends Controller
 
     	$isLike = optional($comment->likes()->where('user_id', Auth::user()->id))->first();
     	$liked = 0; //status seft like
-
-    	if (optional($isLike)->like) {
-    		if($isLike->like === 1) {
-
+    	if (optional($isLike)->like) {  	
     			$isLike->like = 0;
     			$isLike->save();   		
-    			$liked = 0;			
-    		} else {
-    			$isLike->like = 1;
-    			$isLike->save(); 
-    		}
+    			$liked = 0;				
     	} else {
     		//0 know as null so use '0' instead 
     		if(optional($isLike)->like == '0') {
@@ -83,5 +66,19 @@ class CommentController extends Controller
 		    'comments' => Comment::all()->toJson(),
 		]);
 
+    }
+
+    private function _create ($productId, $comments) {
+    	Comment::create([
+    		'user_id' => auth()->user()->id,
+    		'product_id' => $productId,
+    		'comments' 	=> $comments,
+    	]);
+    }
+    
+    private function requiredLogin () {
+    	if(!Auth::check()) {
+    		return redirect()->back();
+    	}
     }
 }

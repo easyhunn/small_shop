@@ -39,3 +39,6 @@ Route::post('/Comment/{comment}/like', 'CommentController@like')->name('comment.
 Route::post('/Comment/{comment}/store', 'ReplyController@store')->name('reply.store');
 Route::delete('/reply/{reply}', 'ReplyController@destroy')->name('reply.destroy');
 
+Route::get('/cart', 'CartController@index')->name('cart.index');
+Route::post('/cart/store', 'CartController@store')->name('cart.store');
+

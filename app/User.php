@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Cart;
 use App\Comment;
 use App\Like;
 use App\Rating;
@@ -53,5 +54,8 @@ class User extends Authenticatable
     }
     function likes() {
         return $this->hasMany(Like::class);
+    }
+    function cart() {
+        return $this->hasOne(Cart::class);
     }
 }

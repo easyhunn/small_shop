@@ -34,7 +34,7 @@ class ProductController extends Controller
     public function create()
     {
         $catagories = Catagory::all();
-        return view('/product/create', compact('catagories'));
+        return view('product.create', compact('catagories'));
     }
 
     /**
@@ -58,6 +58,7 @@ class ProductController extends Controller
             'auxiliary_image_source'    =>  'required|file|image', 
             
         ]);
+        $data['real_price'] = $data['price']*(100 - $data['percentage_discount'])/100;
 
         $product = Product::create($data);
         $this->storeImage($product);

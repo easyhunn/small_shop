@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Cart;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -16,6 +17,10 @@ class Product extends Model
     
     public function users() {
     	return $this->belongsToMany(User::class);
+    }
+
+    public function cart() {
+    	return $this->hasOne(Cart::class);
     }
 
     public function public_path () {

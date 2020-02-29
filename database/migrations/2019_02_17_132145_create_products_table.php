@@ -18,10 +18,11 @@ class CreateProductsTable extends Migration
             $table->bigIncrements('id');
             $table->string('product_name');//should name
             $table->string('catagory_id');
-            $table->string('description');
+            $table->mediumText('description');
             $table->integer('stock');
-            $table->integer('price');
+            $table->float('price', 8, 2);
             $table->unsignedInteger('percentage_discount');
+            $table->float('real_price');
             $table->integer('enable_display');
             $table->string('image_source');
             $table->string('auxiliary_image_source');

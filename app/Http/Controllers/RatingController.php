@@ -75,31 +75,17 @@ class RatingController extends Controller
         //
         $data = $request->validate([
             'rating' => 'required|max:5|min:1',
-            'comments' => 'required',
+            'comments' => 'sometimes',
         ]);
-        if(!Auth::check()) {
-            return redirect()->back()->with('status','please login before rating');
-        }
+
+        $this->requiedLogin();
       
-        if (!Rating::where('user_id', Auth::user()->id)
-                    ->where ('product_id', $product->id)
-                    ->get()->isEmpty()
-        ) {
-            Rating::where('user_id', Auth::user()->id)
-                    ->where ('product_id', $product->id)
-                    ->update(['value' => $request->rating]);
+        if ($this->Exist($product->id)) {
+            $this->_update($request->rating, $product->id);
         } else {
-            Rating::create([
-                'user_id' => Auth::user()->id,
-                'product_id'=> $product->id,
-                'value' => $request->rating,
-            ]);
-            Comment::create([
-                'user_id' => Auth::user()->id,
-                'product_id'=> $product->id,
-                'comments' => $request->comments,
-            ]);
+            $this->_create($request->rating, $product->id);  
         }   
+        $this->_createComment($request->comments, $product->id);
         return redirect()->back();
     }
 
@@ -112,5 +98,39 @@ class RatingController extends Controller
     public function destroy(Rating $rating)
     {
         //
+    }
+
+    private function requiedLogin () {
+        if(!Auth::check()) {
+            return redirect()->back()->with('status','please login before rating');
+        }
+    }
+
+    private function Exist ($productId) {
+        return !Rating::where('user_id', Auth::user()->id)
+                    ->where ('product_id', $productId)
+                    ->get()->isEmpty();
+    }
+
+    private function _update ($value, $productId) {
+        Rating::where('user_id', Auth::user()->id)
+                    ->where ('product_id', $productId)
+                    ->update(['value' => $value]);
+    }
+    private function _create ($value, $productId) {
+        Rating::create([
+                'user_id' => Auth::user()->id,
+                'product_id'=> $productId,
+                'value' => $value,
+            ]);
+    }
+    private function _createComment($value, $productId) {
+        if ($value == null) 
+            return;
+        Comment::create([
+                'user_id' => Auth::user()->id,
+                'product_id'=> $productId,
+                'comments' => $value,
+            ]);
     }
 }

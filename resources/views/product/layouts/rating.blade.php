@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="col-12">
-     <input class="form-control border-0 border-bottom" type="text" required name="comments" placeholder="please enter your comments...">
+     <input class="form-control border-0 border-bottom" type="text" name="comments" placeholder="please enter your comments...">
   </div>
 </div>
   <script>

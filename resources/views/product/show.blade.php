@@ -96,7 +96,7 @@
                                 
                             </div>
                             <div class="price">
-                                ${{ (int)(($product->price)*(100 - $product->percentage_discount)/100) }}
+                                ${{ $product->real_price }}
                                 <span><strike>${{ $product->price }}</strike></span>
                             </div>
                             <a class="add-to-cart" href="">+ Add To Cart</a>
