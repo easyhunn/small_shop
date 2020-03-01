@@ -864,12 +864,12 @@
     </body>
     <script>
     function addToCart(index) {
+
         let quantity = document.getElementById("quantityBox"+index).value;
        
         let productId = document.getElementById("productId"+index).value;
-       
         $.ajax({
-            url:'/cart/store',
+            url:'/cart',
             type:'post',
             data:{
                 _token: "{{ csrf_token() }}",
@@ -879,8 +879,9 @@
             success:function (result) {
                 alert(result.message);
             },
-            error:function (result) {
-                alert(result.status);        
+            error:function (errors) {  
+                let error = errors.responseJSON.message;
+                 alert(errors.status + ": " + error);
             }
         })
     }

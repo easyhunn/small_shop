@@ -40,5 +40,7 @@ Route::post('/Comment/{comment}/store', 'ReplyController@store')->name('reply.st
 Route::delete('/reply/{reply}', 'ReplyController@destroy')->name('reply.destroy');
 
 Route::get('/cart', 'CartController@index')->name('cart.index');
-Route::post('/cart/store', 'CartController@store')->name('cart.store');
-
+Route::post('/cart', 'CartController@store')->name('cart.store');
+Route::patch('/cart/{cart}', 'CartController@update')->name('cart.update');
+Route::get('/get-carts', 'CartController@getCarts')->name('cart.get-carts');
+Route::delete('/cart/{cart}', 'CartController@destroy')->name('cart.destroy');

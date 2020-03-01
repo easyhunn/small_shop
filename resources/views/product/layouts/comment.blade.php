@@ -65,9 +65,11 @@
 				
 			</div>
 			@endcan
+<!--
 			@if(Auth::check())
 			<button type="button" class=" float-right" onclick="showHide('reply_box{{ $key }}','reply_button{{ $key }}')" name = "reply_button" id="reply_button{{ $key }}">reply</button>
 			@endif
+-->
 			<div class="">
 				<button class="border-0 col-sm-2" onclick="like({{ $comment->id }}, {{ $key }})" >
 					@if(!$comment->liked())
@@ -99,11 +101,13 @@
 	</div>
 	<div class="mt-1">
 		<!--input box for replies-->
-		<form action="{{ route('reply.store', compact('comment')) }}" method="post">
-			@csrf
-			
-			<input type="text" name="reply_box" id="reply_box{{ $key }}" hidden class="form-control" placeholder="write your replies...">
-		</form>
+		@if(Auth::check())
+			<form action="{{ route('reply.store', compact('comment')) }}" method="post">
+				@csrf
+				
+				<input type="text" name="reply_box" id="reply_box{{ $key }}" class="form-control" placeholder="write your replies...">
+			</form>
+		@endif
 	</div>
 	@if($comment->replies()->count() > 0)
 	<a href="javascript:void(0);" onclick="showHide('replies{{ $key }}','viewMoreReplies{{ $key }}')" name="viewMoreReplies" id="viewMoreReplies{{ $key }}">view more {{ $comment->replies()->count() }} reply</a>
@@ -200,7 +204,6 @@
 			error: function (result) {
 				alert(result.status);
 			}
-
 		});
 	}
 </script>

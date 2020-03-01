@@ -18,7 +18,7 @@
 		</div>
 		<div class="col-3">
 			<div class="card">
-				<div class="card-header">
+				<div class="card-header" id="subTotal">
 					SubTotal({{ $carts->sum('quantity') }}): {{ $sum }}
 				</div>
 				<div class="card-body d-flex justify-content-center">

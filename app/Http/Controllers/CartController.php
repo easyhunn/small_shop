@@ -53,8 +53,14 @@ class CartController extends Controller
         ]);
 
         if($this->exist($data['productId'])) {
-            
-            $this->_update($data['productId'], $data['quantity']);
+            $oldQuantity = Auth::user()
+                            ->cart()
+                            ->where('product_id', $data['productId'])
+                            ->first()
+                            ->quantity;
+
+            $quantity = $data['quantity'] + $oldQuantity;
+            $this->_update($data['productId'], $quantity);
         } else {
             $this->_create($data['quantity'], $data['productId']);
         }   
@@ -95,6 +101,12 @@ class CartController extends Controller
     public function update(Request $request, Cart $cart)
     {
         //
+        $data = $request->validate([
+            'quantity' => 'required|min:0',
+            'productId' => 'required',
+        ]);
+        $this->_update($data['productId'], $data['quantity']);
+
     }
 
     /**
@@ -106,6 +118,7 @@ class CartController extends Controller
     public function destroy(Cart $cart)
     {
         //
+        $cart->delete();
     }
 
     private function _create (int $quantity,int $productId ) {
@@ -115,23 +128,28 @@ class CartController extends Controller
             'quantity' => $quantity,
         ]);
     }
-    private function _update(string $productId, string $quantity) {
-        $oldQuantity = Auth::user()
-                            ->cart()
-                            ->where('product_id', $productId)
-                            ->first()
-                            ->quantity;
-        
+    private function _update(string $productId, $quantity) {      
         Auth::user()
             ->cart()
             ->where('product_id', $productId)
-            ->update(['quantity' => $oldQuantity + $quantity]);
+            ->update(['quantity' => $quantity]);
     }
     private function exist(string $productId) {
         return !Cart::where('user_id', Auth::user()->id)
                         ->where('product_id', $productId)
                         ->get()
                         ->isEmpty();
+    }
+    function getCarts () {
+         $carts = Auth::user()->cart()->with('product')->get();
+         $sum = 0;
+         foreach($carts as $cart) {
+            $sum += $cart->product->real_price * $cart->quantity;
+         }
+         return response()->Json([
+            'quantity' => $carts->sum('quantity'),
+            'total' => $sum,
+         ]);
     }
     
 }

@@ -14,7 +14,7 @@
 		<div class="row mt-1">
 			<div class="col-12 d-flex justify-content-start">
 				<div class="mr-3">Quantity: </div>
-				<select name="quantities[quantity]" id="quantity{{ $cartKey }}" onchange="getMore({{ $cartKey }})">
+				<select name="quantities[quantity]" id="quantity{{ $cartKey }}" onchange="getMore({{ $cartKey }}, {{ $cart->product->id }}, {{ $cart->id }})">
 					<option value="{{ $cart->quantity }}" selected>{{ $cart->quantity }}</option>
 					@for($i = 1; $i < 10; ++$i)
 					<option value="{{ $i }}">{{ $i }}</option>
@@ -37,10 +37,10 @@
 		</strong>
 	</div>
 </div>
-
 <script>
-	function getMore(index) {
+	function getMore(index, productId, cart) {
 		let select = document.getElementById("quantity"+index);
+		updateQuantity(productId, select.value, cart);
 		if(select.value != 10) {
 			return;
 		}
@@ -50,8 +50,39 @@
 		inputBox.removeAttribute("hidden");
 		inputBox.removeAttribute("disabled");
 	}
+	function updateQuantity(productId, quantity, cart) {
+		try {
+			
+			$.ajax({
+			url: '/cart/'+cart,
+			type: 'patch',
+			data: {
+				_token: "{{ csrf_token() }}",
+				'quantity': quantity,
+				'productId': productId,
+			},
+			success:function (result) {
+				$.ajax({
+					url: '/get-carts',
+					type: 'get',
+					success: function(result) {
+						
+						let subTotal = document.getElementById("subTotal");
+						subTotal.innerHTML = "SubTotal(" + result.quantity + "): " + result.total + "$";
+					},
+					error:function (result) {
+						alert(result.status + ": " + result.responseJSON.message);
+					}
 
-	function updateQuantity() {
+				})
+			},
+			error:function (result) {
 
+				alert(result.status + ": " + result.responseJSON.message);
+			}
+		});
+		} catch (e) {
+			document.write(e);
+		}
 	}
 </script>

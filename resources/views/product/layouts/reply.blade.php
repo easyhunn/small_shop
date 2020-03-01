@@ -29,9 +29,7 @@
 			url: '/reply/'+reply,
 			type: 'delete',
 			data: {
-				"_token": "{{ csrf_token() }}"
-				//token fail
-				
+				"_token": "{{ csrf_token() }}",		
 			}, 
 			success: function(result) {
 				let x = document.getElementById("reply"+index);
