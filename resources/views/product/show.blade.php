@@ -99,7 +99,8 @@
                                 ${{ $product->real_price }}
                                 <span><strike>${{ $product->price }}</strike></span>
                             </div>
-                            <a class="add-to-cart" href="">+ Add To Cart</a>
+                            <a class="add-to-cart" href="javascript:void(0)" data-toggle="modal" data-target="#quantity{{ $product->id }}">+ Add To Cart</a>
+                            @include('layouts.add-to-cart-modal')
                             
                         </div>
                         @foreach(preg_split('/[\n]/', $product->description) as $detail)

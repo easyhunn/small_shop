@@ -15,14 +15,23 @@
 			<div class="row mt-1">
 				<div class="col-12 d-flex justify-content-start">
 					<div class="mr-3">Quantity: </div>
-					<select name="quantities[quantity]" id="quantity{{ $cartKey }}" onchange="getMore({{ $cartKey }}, {{ $cart->product->id }}, {{ $cart->id }})">
+					@if($cart->quantity < 10)
+					<select name="quantities[quantity]" id="quantity{{ $cart->product->id }}" onchange="getMore({{ $cart->product->id }}, {{ $cart->id }})">
 						<option value="{{ $cart->quantity }}" selected>{{ $cart->quantity }}</option>
 						@for($i = 1; $i < 10; ++$i)
 						<option value="{{ $i }}">{{ $i }}</option>
 						@endfor
 						<option value="10" id="10+">10+</option>
 					</select>
-					<input type="number" value="10" name="quantities[quantity]" id="moreQuantity{{ $cartKey }}" disabled hidden style="width:50px;">
+					@endif
+					@if($cart->quantity >= 10) 
+					<input type="number" value="{{ $cart->quantity }}" name="quantities[quantity]" id="bigQuantity{{ $cart->product->id }}" style="width:50px;">
+					<button class="p-1" id="update{{ $cart->product->id }}" onclick="updateBigQuantity({{ $cart->product->id }}, {{ $cart->id }})">update</button>
+					@else 
+						<input type="number" value="10" name="quantities[quantity]" id="bigQuantity{{ $cart->product->id }}" style="width:50px;" hidden disabled>
+					<button class="p-1" hidden id="update{{ $cart->product->id }}" onclick="updateBigQuantity({{ $cart->product->id }}, {{ $cart->id }})">update</button>
+					@endif
+					
 				</div>
 			</div>
 			<div class="row mt-2">
@@ -49,6 +58,7 @@
 			//reload subtitle
 				let subTotal = document.getElementById("subTotal");
 				subTotal.innerHTML = "SubTotal(" + carts.quantity + "): " + carts.total + "$";
+
 			},
 			error:function (result) {
 					alert(result.status + ": " + result.responseJSON.message);
@@ -57,19 +67,50 @@
 		
 		
 	}
-	function getMore(index, productId, cart) {
-		let select = document.getElementById("quantity"+index);
-		updateQuantity(productId, select.value, cart);
+	function getMore(productId, cart) {
+		
+		updateQuantity(productId, cart);
+		let select = document.getElementById("quantity"+productId);
 		if(select.value != 10) {
 			return;
 		}
+
 		select.setAttribute("hidden", "true");
 		select.setAttribute("disabled", "true");
-		let inputBox = document.getElementById("moreQuantity"+index);
+		let inputBox = document.getElementById("bigQuantity"+productId);
 		inputBox.removeAttribute("hidden");
 		inputBox.removeAttribute("disabled");
+		let updateButton = document.getElementById("update"+productId);
+		updateButton.removeAttribute("hidden");
 	}
-	function updateQuantity(productId, quantity, cart) {
+
+	function updateQuantity(productId, cart) {		
+		let quantity = document.getElementById("quantity"+productId).value;
+		try {
+			
+			$.ajax({
+			url: '/cart/'+cart,
+			type: 'patch',
+			data: {
+				_token: "{{ csrf_token() }}",
+				'quantity': quantity,
+				'productId': productId,
+			},
+			success:function (result) {
+				//reload
+				reloadSubTotal();
+			},
+			error:function (result) {
+				alert(result.status + ": " + result.responseJSON.message);
+			}
+		});
+		} catch (e) {
+			document.write(e);
+		}
+
+	}
+	function updateBigQuantity (productId, cart) {
+		let quantity = document.getElementById("bigQuantity"+productId).value;
 		try {
 			
 			$.ajax({

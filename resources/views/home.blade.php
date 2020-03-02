@@ -11,7 +11,7 @@
             <div class="card">
 
                 <div class="card-body">
-                    @include('layouts.home.main-index')
+                    @include('home.main-index')
                     
                 </div>
             </div>

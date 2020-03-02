@@ -26,7 +26,7 @@
                             <ul class="social">
                                 <li><a href="{{ $product->public_path() }}" data-tip="Quick View"><i class="fa fa-search"></i></a></li>
                                 <li><a href="" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
-                                <li><a href="javascript:void(0);" data-tip="Add to Cart" data-toggle="modal" data-target="#quantity{{ $productKey }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                <li><a href="javascript:void(0);" data-tip="Add to Cart" data-toggle="modal" data-target="#quantity{{ $product->id }}"><i class="fa fa-shopping-cart"></i></a></li>
                             </ul>
                             @if($product->percentage_discount > 0)
                             <span class="product-new-label">Sale</span>
@@ -49,40 +49,14 @@
                                 <span>${{ $product->price }}</span>
                                 @endif
                             </div>
-                            <a href="javascript:void(0);" class="add-to-cart" data-toggle="modal" data-target="#quantity{{ $productKey }}">+ Add To Cart</a>
-                            
-                            
-                            
-                            
+                            <a href="javascript:void(0);" class="add-to-cart" data-toggle="modal" data-target="#quantity{{ $product->id }}">+ Add To Cart</a>
+                                                       
                         </div>
                     </div>
                 </div>
-                <!-- Modal -->
-                
-                <div class="modal fade" id="quantity{{ $productKey }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Quantity</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        
-                            <div class="modal-body">
-                                <input type="number" id="quantityBox{{ $productKey }}" name="quantity" value="1">
-                                <input type="text" name="productId" id="productId{{ $productKey }}" hidden value="{{ $product->id }}">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                
-                                    <button type="submit" onclick="addToCart({{ $productKey }})" class="btn btn-primary">ADD</button>
-                                
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
+
+                <!--add to cart modal-->
+                @include('layouts.add-to-cart-modal')
                 
                 @endforeach
                 
@@ -862,28 +836,5 @@
         </div>
         <hr>
     </body>
-    <script>
-    function addToCart(index) {
-
-        let quantity = document.getElementById("quantityBox"+index).value;
-       
-        let productId = document.getElementById("productId"+index).value;
-        $.ajax({
-            url:'/cart',
-            type:'post',
-            data:{
-                _token: "{{ csrf_token() }}",
-                'quantity': quantity,
-                'productId': productId,
-            },
-            success:function (result) {
-                alert(result.message);
-            },
-            error:function (errors) {  
-                let error = errors.responseJSON.message;
-                 alert(errors.status + ": " + error);
-            }
-        })
-    }
-    </script>
+    
 </html>

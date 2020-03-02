@@ -3,6 +3,8 @@
 <div class="p-4">
 	<div class="row">
 		<div class="col-9">
+
+			<!--row cart-->
 			@php
 				$sum = 0;
 				
@@ -14,12 +16,12 @@
 				@endphp
 				@include('cart.product-row')
 			@endforeach
-			
+			<!--row save_for_late-->
 		</div>
 		<div class="col-3">
 			<div class="card">
 				<div class="card-header" id="subTotal">
-					SubTotal({{ $carts->sum('quantity') }}): {{ $sum }}
+					SubTotal({{ $carts->sum('quantity') }}): {{ $sum }}$
 				</div>
 				<div class="card-body d-flex justify-content-center">
 					<button class="btn btn-dark">Proceeded to check out</button>
