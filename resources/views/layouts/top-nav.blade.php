@@ -24,10 +24,57 @@
       
     </ul>
     <form class="form-inline my-2 my-lg-0 col-6">
-      <input class="form-control col-12" type="search" placeholder="Search" aria-label="Search">
-     
+      <input class="form-control col-12" list="allProduct" type="search" placeholder="Search" aria-label="Search" oninput="getProduct()" id="topSearch">
+      <datalist id="allProduct">
+          
+      </datalist>
     </form>
   </div>
 
 </nav>
+
+<script>
+    let recommends = [];
+    let recommendIndex = 0;
+
+    function getProduct() {
+        let keyWord = document.getElementById("topSearch").value;
+
+        $.ajax({
+          url:"/product/getAll",
+          type:"get",
+          success: function(result) {
+
+              for (i in result) {
+                let recommend = result[i].product_name;
+                if(recommend.includes(keyWord)) {
+                  addRecommendProduct(recommend);
+                }
+              }
+          },
+          error: function (result) {
+            alert(result.status + ": " +result.responseJSON.message);
+          }
+        })
+    }
+    function existRecommend(recommend) {
+        for(i in recommends) {
+          if(recommends[i] == recommend) {
+            return true;
+          }
+        }
+        return false;
+    }
+    function addRecommendProduct(recommend) {
+        if(existRecommend(recommend))
+          return;
+        let list = document.getElementById("allProduct");
+        let option = document.createElement("option");
+        option.setAttribute("value", recommend);
+        list.appendChild(option);
+        recommends[recommendIndex] = recommend;
+        recommendIndex++;
+    }
+   
+</script>
 

@@ -24,8 +24,11 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/Product/create', 'ProductController@create')->name('product.create');
-Route::post('/Product', 'ProductController@store')->name('product');
-Route::get('/product/{product}-{slug}', 'ProductController@show');
+Route::post('/Product', 'ProductController@store')->name('product')->name('product.store');
+Route::get('/product/{product}-{slug}', 'ProductController@show')->name('product.show');
+Route::get('/product/search', 'ProductController@search')->name('product.search');
+Route::get('/product/getAll', 'ProductController@getAll')->name('product.getAll');
+
 
 Route::get('/Catagory/{catagory}', 'CatagoryController@show')->name('catagory.show');
 

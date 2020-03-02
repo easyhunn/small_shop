@@ -118,6 +118,17 @@ class ProductController extends Controller
         //
     }
 
+    public function search() {
+
+    }
+
+    public function getAll() {
+        $product = Product::all();
+        return response()->json(
+            $product->toArray()
+        );
+    }
+
     public function storeImage($product) {
         if(request()->hasFile('image_source')){
             $product->update([
