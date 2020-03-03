@@ -119,7 +119,11 @@ class ProductController extends Controller
     }
 
     public function search() {
-
+        $query = request()->data;
+        $catagories = Catagory::all();
+        $products = Product::where('product_name','like','%'.$query."%")->orderBy('id', 'DESC')->paginate(4);
+        
+        return view('home', compact('products', 'catagories'));
     }
 
     public function getAll() {

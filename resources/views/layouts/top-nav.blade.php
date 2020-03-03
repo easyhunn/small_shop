@@ -23,11 +23,9 @@
       </li>
       
     </ul>
-    <form class="form-inline my-2 my-lg-0 col-6">
-      <input class="form-control col-12" list="allProduct" type="search" placeholder="Search" aria-label="Search" oninput="getProduct()" id="topSearch">
-      <datalist id="allProduct">
-          
-      </datalist>
+    <form class="form-inline my-2 my-lg-0 col-6" action="/product/search" method="get">
+      <input class="form-control col-12" list="allProduct" name="data" type="search" placeholder="Search" aria-label="Search" oninput="getProduct()" id="topSearch">
+      <datalist id="allProduct"></datalist>
     </form>
   </div>
 
