@@ -24,12 +24,30 @@
 						<option value="10" id="10+">10+</option>
 					</select>
 					@endif
+
 					@if($cart->quantity >= 10) 
-					<input type="number" value="{{ $cart->quantity }}" name="quantities[quantity]" id="bigQuantity{{ $cart->product->id }}" style="width:50px;">
-					<button class="p-1" id="update{{ $cart->product->id }}" onclick="updateBigQuantity({{ $cart->product->id }}, {{ $cart->id }})">update</button>
+						<input type="number" value="{{ $cart->quantity }}"
+								name="quantities[quantity]"
+								id="bigQuantity{{ $cart->product->id }}" 
+								style="width:50px;"
+								oninput="show('update{{ $cart->product->id }}')">
+						<button class="ml-1" 
+								id="update{{ $cart->product->id }}" 
+								onclick="updateBigQuantity({{ $cart->product->id }}, {{ $cart->id }})" hidden>
+							update
+						</button>					
 					@else 
-						<input type="number" value="10" name="quantities[quantity]" id="bigQuantity{{ $cart->product->id }}" style="width:50px;" hidden disabled>
-					<button class="p-1" hidden id="update{{ $cart->product->id }}" onclick="updateBigQuantity({{ $cart->product->id }}, {{ $cart->id }})">update</button>
+						<input type="number" 
+								value="10" 
+								name="quantities[quantity]" 
+								id="bigQuantity{{ $cart->product->id }}" 
+								style="width:50px;" 
+								hidden disabled>
+						<button class="ml-1" 
+								hidden 
+								id="update{{ $cart->product->id }}" 
+								onclick="updateBigQuantity({{ $cart->product->id }}, {{ $cart->id }})">update
+						</button>
 					@endif
 					
 				</div>
@@ -151,5 +169,9 @@
 				alert(result.status + " " + result.responseJSON.message);
 			}
 		});
+	}
+
+	function show (id) {
+		document.getElementById(id).removeAttribute("hidden");
 	}
 </script>

@@ -44,7 +44,11 @@
             },
             error:function (errors) {  
                 let error = errors.responseJSON.message;
-                 alert(errors.status + ": " + error);
+                if(error.includes("Unauthenticated")) {
+                    window.location.href= "login";
+                }
+                alert(errors.status + ": " + error);
+
             }
         })
     }

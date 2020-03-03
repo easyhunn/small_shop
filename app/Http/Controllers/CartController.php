@@ -146,9 +146,10 @@ class CartController extends Controller
          foreach($carts as $cart) {
             $sum += $cart->product->real_price * $cart->quantity;
          }
+
          return response()->Json([
             'quantity' => $carts->sum('quantity'),
-            'total' => $sum,
+            'total' => round($sum, 2),
          ]);
     }
     
