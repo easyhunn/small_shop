@@ -47,3 +47,6 @@ Route::post('/cart', 'CartController@store')->name('cart.store');
 Route::patch('/cart/{cart}', 'CartController@update')->name('cart.update');
 Route::get('/get-carts', 'CartController@getCarts')->name('cart.get-carts');
 Route::delete('/cart/{cart}', 'CartController@destroy')->name('cart.destroy');
+
+Route::post('/auxilary-cart', 'AuxiliaryCartController@store')->name('auxiliary-cart.store');
+Route::delete('/auxilary-cart/{auxiliaryCart}', 'AuxiliaryCartController@destroy')->name('auxiliary-cart.destroy');

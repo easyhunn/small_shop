@@ -19,8 +19,10 @@ class CartController extends Controller
     public function index()
     {
         //
-        $carts = Auth::user()->cart()->with('product')->get();
-        return view('cart.index', compact('carts'));
+        $carts = Auth::user()->carts()->orderBy('id', 'DESC')->with('product')->get();
+        $auxiliaryCarts = Auth::user()->AuxiliaryCarts()->orderBy('id', 'DESC')->with('product')->get();
+
+        return view('cart.index', compact('carts', 'auxiliaryCarts'));
     }
 
     /**
@@ -54,7 +56,7 @@ class CartController extends Controller
 
         if($this->exist($data['productId'])) {
             $oldQuantity = Auth::user()
-                            ->cart()
+                            ->carts()
                             ->where('product_id', $data['productId'])
                             ->first()
                             ->quantity;
@@ -130,7 +132,7 @@ class CartController extends Controller
     }
     private function _update(string $productId, $quantity) {      
         Auth::user()
-            ->cart()
+            ->carts()
             ->where('product_id', $productId)
             ->update(['quantity' => $quantity]);
     }
@@ -141,7 +143,7 @@ class CartController extends Controller
                         ->isEmpty();
     }
     function getCarts () {
-         $carts = Auth::user()->cart()->with('product')->get();
+         $carts = Auth::user()->carts()->with('product')->get();
          $sum = 0;
          foreach($carts as $cart) {
             $sum += $cart->product->real_price * $cart->quantity;

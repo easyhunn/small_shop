@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Cart;
+use App\auxiliaryCarts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -20,7 +21,11 @@ class Product extends Model
     }
 
     public function cart() {
-    	return $this->hasOne(Cart::class);
+    	return $this->hasMany(Cart::class);
+    }
+
+    public function auxiliaryCarts() {
+        return $this->hasMany(auxiliaryCarts::class);
     }
 
     public function public_path () {
