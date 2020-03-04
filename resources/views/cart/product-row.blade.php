@@ -6,7 +6,7 @@
 		<div class="col-8">
 			<div class="row">
 				<div class="col-9">
-					<h5><a href="#">
+					<h5><a href="{{ $cart->product->public_path() }}">
 						{{ $cart->product->product_name }}
 					</a></h5>
 				</div>
@@ -16,8 +16,12 @@
 				<div class="col-12 d-flex justify-content-start">
 					<div class="mr-3">Quantity: </div>
 					@if($cart->quantity < 10)
-					<select name="quantities[quantity]" id="quantity{{ $cart->product->id }}" onchange="getMore({{ $cart->product->id }}, {{ $cart->id }})">
-						<option value="{{ $cart->quantity }}" selected>{{ $cart->quantity }}</option>
+					<select name="quantities[quantity]" 
+							id="quantity{{ $cart->product->id }}" 
+							onchange="getMore({{ $cart->product->id }}, {{ $cart->id }})">
+						<option value="{{ $cart->quantity }}" 
+								selected>{{ $cart->quantity }}
+						</option>
 						@for($i = 1; $i < 10; ++$i)
 						<option value="{{ $i }}">{{ $i }}</option>
 						@endfor
@@ -54,10 +58,15 @@
 			</div>
 			<div class="row mt-2">
 				<div class="col-12 d-flex justify-content-start">
-					<a href="javascript:void(0);" onclick="deleteRow({{ $cart->id }})" class="border-left pl-3">Delete</a>
+					<a href="javascript:void(0);"
+							onclick="deleteRow({{ $cart->id }})" 
+							class="border-left pl-3">
+						Delete
+					</a>
 					<form action="{{ route('auxiliary-cart.store') }}" method="post">
 						@csrf
 						<input type="text" hidden name="productId" value="{{ $cart->product->id }}">
+						<input type="text" hidden name="quantity" value="{{ $cart->quantity }}">
 						<a onclick="this.closest('form').submit();return false;" href="#" class="border-left pl-3 ml-3">Save for later</a>
 					</form>
 					

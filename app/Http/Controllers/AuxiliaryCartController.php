@@ -45,10 +45,17 @@ class AuxiliaryCartController extends Controller
         }
         $data = $request->validate([
             'productId' => 'required',
+            'quantity'  => 'required'
         ]);
         $this->deleteCart($data['productId']);
+
         if(!$this->exist($data['productId'])) {
-            $this->_create($request->productId);
+            $this->_create($request->productId, $request->quantity);
+        } else {
+            $quantity = AuxiliaryCart::where('user_id', Auth::user()->id)
+                                        ->where('product_id', $data['productId'])
+                                        ->first()->quantity + $data['quantity'];
+            $this->_update($request->productId, $quantity);
         }
         return redirect()->back();
     }
@@ -103,11 +110,11 @@ class AuxiliaryCartController extends Controller
             'total' => $total
         ]);
     }
-    private function _create ($productId) {
+    private function _create ($productId, $quantity) {
         AuxiliaryCart::create([
             'user_id' => Auth::user()->id,
             'product_id' => $productId,
-            'quantity' => 1
+            'quantity' => $quantity
         ]);
     }
     private function _update(string $productId, $quantity) {      

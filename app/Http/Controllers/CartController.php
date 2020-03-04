@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\AuxiliaryCart;
 use App\Cart;
-use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
@@ -143,6 +144,7 @@ class CartController extends Controller
                         ->isEmpty();
     }
     function getCarts () {
+        //get quantity and total product
          $carts = Auth::user()->carts()->with('product')->get();
          $sum = 0;
          foreach($carts as $cart) {
@@ -154,5 +156,16 @@ class CartController extends Controller
             'total' => round($sum, 2),
          ]);
     }
-    
+
+    function addToCart (Request $request) {
+
+        $this->store($request);
+        $this->destroyAuxiliaryCart($request->auxiliaryCart);
+        return redirect()->back();
+    }
+
+    //auxiliary function
+    function destroyAuxiliaryCart ($auxiliaryCart) {
+        AuxiliaryCart::where('id', $auxiliaryCart)->delete();
+    }
 }

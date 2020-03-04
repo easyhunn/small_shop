@@ -138,8 +138,9 @@
 </script>
 <div class="p-4">
 	<div class="row">
-		<div class="col-9">
 
+		<div class="col-9">
+	
 			<!--row cart-->
 			@php
 				$sum = 0;

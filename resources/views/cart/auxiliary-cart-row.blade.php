@@ -6,7 +6,7 @@
 		<div class="col-8">
 			<div class="row">
 				<div class="col-9">
-					<h5><a href="#">
+					<h5><a href="{{ $auxiliaryCart->product->public_path() }}">
 						{{ $auxiliaryCart->product->product_name }}
 					</a></h5>
 				</div>
@@ -16,9 +16,11 @@
 			<div class="row mt-2">
 				<div class="col-12 d-flex justify-content-start">
 					<a href="javascript:void(0);" onclick="deleteFromAuxiliaryCart({{ $auxiliaryCart->id }})" class="border-left pl-3">Delete</a>
-					<form action="" method="post">
+					<form action="{{ route('cart.add-to-cart') }}" method="post">
 						@csrf
 						<input type="text" hidden name="productId" value="{{ $auxiliaryCart->product->id }}">
+						<input type="text" hidden name="auxiliaryCart" value="{{ $auxiliaryCart->id }}">
+						<input type="text" hidden name="quantity" value="{{ $auxiliaryCart->quantity }}">
 						<a onclick="this.closest('form').submit();return false;" href="#" class="border-left pl-3 ml-3">Add to cart</a>
 					</form>
 					

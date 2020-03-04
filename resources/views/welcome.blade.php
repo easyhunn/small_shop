@@ -81,7 +81,7 @@
 
             <div class="content">
                 
-                <h1>@easyhunn</h1>
+                <h1><a href="{{ route('home') }}" style="font-size: 80px;">@easyhunn</a></h1>
             </div>
         </div>
     </body>
