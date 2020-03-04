@@ -16,7 +16,7 @@
             
             <div class="row">
                 @foreach($products as $productKey => $product)
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-6 pb-4">
                     <div class="product-grid">
                         <div class="product-image">
                             <a href="{{ $product->public_path() }}">
@@ -61,6 +61,7 @@
                 @endforeach
                 
             </div>
+            {{ $products->links() }}
         </div>
         <hr>
         <div class="container">

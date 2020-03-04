@@ -4,7 +4,7 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 
-<form class="form-horizontal" action="{{ route('product') }}" method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action="{{ route('product.store') }}" method="post" enctype="multipart/form-data">
 @csrf
 <fieldset>
 

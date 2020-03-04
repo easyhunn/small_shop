@@ -23,8 +23,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/Product/create', 'ProductController@create')->name('product.create');
-Route::post('/Product', 'ProductController@store')->name('product')->name('product.store');
+Route::get('/product/create', 'ProductController@create')->name('product.create');
+Route::post('/product', 'ProductController@store')->name('product.store');
 Route::get('/product/{product}-{slug}', 'ProductController@show')->name('product.show');
 Route::get('/product/search', 'ProductController@search')->name('product.search');
 Route::get('/product/getAll', 'ProductController@getAll')->name('product.getAll');
@@ -51,3 +51,8 @@ Route::post('/cart/add-to-cart', 'CartController@addToCart')->name('cart.add-to-
 
 Route::post('/auxilary-cart', 'AuxiliaryCartController@store')->name('auxiliary-cart.store');
 Route::delete('/auxilary-cart/{auxiliaryCart}', 'AuxiliaryCartController@destroy')->name('auxiliary-cart.destroy');
+
+Route::get('/account/', 'AccountController@show')->name('account.show');
+Route::get('/account/change-password', 'AccountController@changePassword')->name('account.change-password');
+Route::patch('/account', 'AccountController@update')->name('account.update');
+Route::patch('/account/update-password', 'AccountController@updatePassWord')->name('account.update-password');
