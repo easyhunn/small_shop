@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCartsTable extends Migration
+class CreateProcessesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateCartsTable extends Migration
      */
     public function up()
     {
-        Schema::create('carts', function (Blueprint $table) {
-            $table->unsignedBigInteger('quantity');
-           
+        Schema::create('processes', function (Blueprint $table) {           
+            
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('quantity');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('status'); //1 -> in cart, 2-> on process, 0->on queue
+
             $table->foreign('user_id')
                     ->references('id')
                     ->on('users')
@@ -39,6 +39,6 @@ class CreateCartsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('carts');
+        Schema::dropIfExists('processes');
     }
 }

@@ -38,6 +38,7 @@
                 _token: "{{ csrf_token() }}",
                 'quantity': quantity,
                 'productId': productId,
+                'status': 1,
             },
             success:function (result) {
                 alert(result.message);

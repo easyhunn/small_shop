@@ -20,9 +20,8 @@ class CartController extends Controller
     public function index()
     {
         //
-        $carts = Auth::user()->carts()->orderBy('id', 'DESC')->with('product')->get();
-        $auxiliaryCarts = Auth::user()->AuxiliaryCarts()->orderBy('id', 'DESC')->with('product')->get();
-
+        $carts = Auth::user()->carts()->orderBy('id', 'DESC')->where('status', '1')->with('product')->get();
+        $auxiliaryCarts = Auth::user()->carts()->orderBy('id', 'DESC')->where('status', '0')->with('product')->get();
         return view('cart.index', compact('carts', 'auxiliaryCarts'));
     }
 
@@ -52,8 +51,9 @@ class CartController extends Controller
         }
         $data = $request->validate([
             'productId' => 'required',
-            'quantity'  => 'required'
+            'quantity'  => 'required',
         ]);
+        $data['status'] = 1;
 
         if($this->exist($data['productId'])) {
             $oldQuantity = Auth::user()
@@ -129,6 +129,7 @@ class CartController extends Controller
             'user_id' => Auth::user()->id,
             'product_id' => $productId,
             'quantity' => $quantity,
+            'status'   => 1,
         ]);
     }
     private function _update(string $productId, $quantity) {      
@@ -145,7 +146,7 @@ class CartController extends Controller
     }
     function getCarts () {
         //get quantity and total product
-         $carts = Auth::user()->carts()->with('product')->get();
+         $carts = Auth::user()->carts()->where('status', request()->status)->with('product')->get();
          $sum = 0;
          foreach($carts as $cart) {
             $sum += $cart->product->real_price * $cart->quantity;
@@ -157,15 +158,14 @@ class CartController extends Controller
          ]);
     }
 
-    function addToCart (Request $request) {
+    function addToCart (Request $request, Cart $cart) {
 
-        $this->store($request);
-        $this->destroyAuxiliaryCart($request->auxiliaryCart);
+        $cart->update(['status' => '1']);
         return redirect()->back();
     }
 
-    //auxiliary function
-    function destroyAuxiliaryCart ($auxiliaryCart) {
-        AuxiliaryCart::where('id', $auxiliaryCart)->delete();
+    function safeForLate (Cart $cart) {
+        $cart->update(['status' => '0']);
+        return redirect()->back();
     }
 }

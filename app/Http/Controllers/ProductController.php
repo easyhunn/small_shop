@@ -33,6 +33,7 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $this->authorize('create',Product::class);
         $catagories = Catagory::all();
         return view('product.create', compact('catagories'));
     }

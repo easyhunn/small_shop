@@ -6,6 +6,9 @@
 		$.ajax({
 			url: '/get-carts',
 			type: 'get',
+			data: {
+				'status': '1',
+			},
 			success: function(carts) {
 			//reload subtitle
 				let subTotal = document.getElementById("subTotal");
@@ -169,7 +172,8 @@
 					SubTotal({{ $carts->sum('quantity') }}): {{ $sum }}$
 				</div>
 				<div class="card-body d-flex justify-content-center">
-					<button class="btn btn-dark">Proceeded to check out</button>
+				
+					<a href="{{ route('process.create') }}" class="btn btn-dark">Proceeded to check out</a>
 				</div>
 			</div>
 		</div>

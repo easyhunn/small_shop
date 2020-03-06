@@ -15,8 +15,9 @@
 			
 			<div class="row mt-2">
 				<div class="col-12 d-flex justify-content-start">
-					<a href="javascript:void(0);" onclick="deleteFromAuxiliaryCart({{ $auxiliaryCart->id }})" class="border-left pl-3">Delete</a>
-					<form action="{{ route('cart.add-to-cart') }}" method="post">
+					<a href="javascript:void(0);" onclick="deleteRow({{ $auxiliaryCart->id }})" class="border-left pl-3">Delete</a>
+					<form action="{{ route('cart.add-to-cart',['cart' => $auxiliaryCart]) }}" method="post">
+						@method('patch')
 						@csrf
 						<input type="text" hidden name="productId" value="{{ $auxiliaryCart->product->id }}">
 						<input type="text" hidden name="auxiliaryCart" value="{{ $auxiliaryCart->id }}">

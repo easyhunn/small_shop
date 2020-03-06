@@ -63,10 +63,9 @@
 							class="border-left pl-3">
 						Delete
 					</a>
-					<form action="{{ route('auxiliary-cart.store') }}" method="post">
+					<form action="{{ route('cart.safe-for-late', compact('cart')) }}" method="post">
+						@method('patch')
 						@csrf
-						<input type="text" hidden name="productId" value="{{ $cart->product->id }}">
-						<input type="text" hidden name="quantity" value="{{ $cart->quantity }}">
 						<a onclick="this.closest('form').submit();return false;" href="#" class="border-left pl-3 ml-3">Save for later</a>
 					</form>
 					

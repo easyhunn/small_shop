@@ -6,8 +6,10 @@ use App\AuxiliaryCart;
 use App\Cart;
 use App\Comment;
 use App\Like;
+use App\Process;
 use App\Rating;
 use App\Reply;
+use App\Role;
 use App\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,9 +24,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password','last_login_at', 'user_name', 'phone'
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -61,5 +61,11 @@ class User extends Authenticatable
     }
     function AuxiliaryCarts() {
         return $this->hasMany(AuxiliaryCart::class);
+    }
+    function Process() {
+        return $this->hasMany(Process::class);
+    }
+    function Roles() {
+        return $this->belongsToMany(Role::class);
     }
 }

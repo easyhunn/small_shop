@@ -4,11 +4,16 @@
       <li class="nav-item active">
         <a class="nav-link" href="{{ route('home') }}">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ route('product.create') }}">New</a>
-      </li>
+      @can('create', App\product::class)
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('product.create') }}">New</a>
+        </li>
+      @endcan
       <li class="nav-item">
         <a class="nav-link" href="{{ route('cart.index') }}">Cart</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('process.index') }}">Process</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -24,7 +29,7 @@
       
     </ul>
     <form class="form-inline my-2 my-lg-0 col-6" action="/product/search" method="get">
-      <input class="form-control col-12" list="allProduct" name="data" type="search" placeholder="Search" aria-label="Search" oninput="getProduct()" id="topSearch">
+      <input class="form-control col-12" list="allProduct" name="data" type="search" placeholder="Search" aria-label="Search" oninput="getProduct()" id="topSearch" value="{{ old('data') }}">
       <datalist id="allProduct"></datalist>
     </form>
   </div>

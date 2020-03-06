@@ -47,12 +47,14 @@ Route::post('/cart', 'CartController@store')->name('cart.store');
 Route::patch('/cart/{cart}', 'CartController@update')->name('cart.update');
 Route::get('/get-carts', 'CartController@getCarts')->name('cart.get-carts');
 Route::delete('/cart/{cart}', 'CartController@destroy')->name('cart.destroy');
-Route::post('/cart/add-to-cart', 'CartController@addToCart')->name('cart.add-to-cart');
-
-Route::post('/auxilary-cart', 'AuxiliaryCartController@store')->name('auxiliary-cart.store');
-Route::delete('/auxilary-cart/{auxiliaryCart}', 'AuxiliaryCartController@destroy')->name('auxiliary-cart.destroy');
+Route::patch('/cart/add-to-cart/{cart}', 'CartController@addToCart')->name('cart.add-to-cart');
+Route::patch('/cart/safe-for-late/{cart}', 'CartController@safeForLate')->name('cart.safe-for-late');
 
 Route::get('/account/', 'AccountController@show')->name('account.show');
 Route::get('/account/change-password', 'AccountController@changePassword')->name('account.change-password');
 Route::patch('/account', 'AccountController@update')->name('account.update');
 Route::patch('/account/update-password', 'AccountController@updatePassWord')->name('account.update-password');
+
+Route::get('/process/create', 'ProcessController@create')->name('process.create');
+Route::get('/process', 'ProcessController@index')->name('process.index');
+Route::patch('/process', 'ProcessController@update')->name('process.update');
