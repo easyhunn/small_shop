@@ -35,7 +35,7 @@
                     </div>
                     <div class="description col-6">
                         <div class="product-content">
-                            <h3 class="title"><a href="#">{{ $product->product_name }}</a></h3>
+                            <h3 class="title"><a href="#">{{ $product->name }}</a></h3>
                             
                             
                             <ul class="rating">
@@ -56,7 +56,7 @@
                             </ul>
                             
                             @if(Auth::check())
-                                @include('product.layouts.vote-button')
+                                @include('product.layouts.modal.vote')
                             @endif
                             
                             <div>

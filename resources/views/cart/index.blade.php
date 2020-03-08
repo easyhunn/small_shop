@@ -52,6 +52,8 @@
 			},
 			success:function (result) {
 				//reload
+				if(result.message) 
+					alert(result.message);
 				reloadSubTotal();
 			},
 			error:function (result) {
@@ -154,14 +156,14 @@
 					$sum += $cart->product->real_price*$cart->quantity;
 
 				@endphp
-				@include('cart.product-row')
+				@include('cart.row')
 			@endforeach
 			<!--row save_for_late-->
 			@if(!$auxiliaryCarts->isEmpty())
 				<div class="mt-4 pt-4 border-top">
 					<h3><strong><span id="auxiliaryTotal">Safe for late ({{ $auxiliaryCarts->count() }})</span></strong> </h3>
 					@foreach($auxiliaryCarts as $auxiliaryCart)
-						@include('cart.auxiliary-cart-row')
+						@include('cart.auxrow')
 					@endforeach
 				</div>
 			@endif

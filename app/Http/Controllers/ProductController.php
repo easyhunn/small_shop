@@ -47,18 +47,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
        
-        $data = $request->validate([
-            'product_name'      =>  'required',
-            'catagory_id'       =>  'required',
-            'enable_display'    =>  'required',
-            'description'        =>  'required',
-            'stock'             =>  'required',
-            'price'             =>   'required',
-            'percentage_discount'  =>  'required|max:100|min:0',
-            'image_source'      =>  'required|file|image',
-            'auxiliary_image_source'    =>  'required|file|image', 
-            
-        ]);
+        $data = $this->validateData();
         $data['real_price'] = $data['price']*(100 - $data['percentage_discount'])/100;
 
         $product = Product::create($data);
@@ -94,6 +83,8 @@ class ProductController extends Controller
     public function edit(product $product)
     {
         //
+        $catagories = Catagory::all();
+        return view('product.edit', compact('product', 'catagories'));
     }
 
     /**
@@ -106,6 +97,22 @@ class ProductController extends Controller
     public function update(Request $request, product $product)
     {
         //
+        $this->authorize('update', $product);
+        $data = request()->validate([
+            'name'      =>  'required',
+            'catagory_id'       =>  'required',
+            'enable_display'    =>  'required',
+            'description'        =>  'required',
+            'stock'             =>  'required',
+            'price'             =>   'required',
+            'percentage_discount'  =>  'required|max:100|min:0',
+            'image_source'      =>  'sometimes|file|image',
+            'auxiliary_image_source'    =>  'sometimes|file|image', 
+        ]);
+        $data['real_price'] = $data['price']*(100 - $data['percentage_discount'])/100;
+        $product->update($data);
+        $this->storeImage($product);
+        return redirect()->back();
     }
 
     /**
@@ -117,12 +124,15 @@ class ProductController extends Controller
     public function destroy(product $product)
     {
         //
+        $this->authorize('delete', $product);
+        $product->delete();
+        return redirect()->back();
     }
 
     public function search() {
         $query = request()->data;
         $catagories = Catagory::all();
-        $products = Product::where('product_name','like','%'.$query."%")->orderBy('id', 'DESC')->paginate(4);
+        $products = Product::where('name','like','%'.$query."%")->orderBy('id', 'DESC')->paginate(4);
         
         return view('home', compact('products', 'catagories'));
     }
@@ -130,7 +140,7 @@ class ProductController extends Controller
     public function getAll() {
         $product = Product::all();
         return response()->json(
-            $product->toArray()
+            $product->toArray(),
         );
     }
 
@@ -145,5 +155,19 @@ class ProductController extends Controller
             $auxiliary_image = Image::make(public_path('storage/'.$product->auxiliary_image_source))->fit(640,830);
             $auxiliary_image->save();
         }
+    }
+    function validateData () {
+        return request()->validate([
+            'name'      =>  'required',
+            'catagory_id'       =>  'required',
+            'enable_display'    =>  'required',
+            'description'        =>  'required',
+            'stock'             =>  'required',
+            'price'             =>   'required',
+            'percentage_discount'  =>  'required|max:100|min:0',
+            'image_source'      =>  'required|file|image',
+            'auxiliary_image_source'    =>  'required|file|image', 
+            
+        ]);
     }
 }

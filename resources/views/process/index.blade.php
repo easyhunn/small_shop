@@ -154,7 +154,7 @@
                     $sum += $cart->product->real_price*$cart->quantity;
 
                 @endphp
-                @include('cart.product-row')
+                @include('process.productrow')
             @endforeach
             <!--row save_for_late-->
             

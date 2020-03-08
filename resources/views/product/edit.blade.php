@@ -4,7 +4,8 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 
-<form class="form-horizontal" action="{{ route('product.store') }}" method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action="{{ route('product.update', compact('product')) }}" method="post" enctype="multipart/form-data">
+@method('patch')
 @csrf
 <fieldset>
 
@@ -16,7 +17,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">PRODUCT NAME</label>  
   <div class="col-md-4">
-  <input id="name" name="name" placeholder="PRODUCT NAME" class="form-control input-md" required="" type="text" value="{{ old('name') }}">
+  <input id="name" name="name" placeholder="PRODUCT NAME" class="form-control input-md" required="" type="text" value="{{ $product->name }}">
   </div>
   @error('name')
     <small class="text-danger">{{ $message }}</small>
@@ -42,7 +43,9 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="description">PRODUCT DESCRIPTION</label>
   <div class="col-md-4">                     
-    <textarea class="form-control" id="description" name="description" required>{{ old('description') }}</textarea>
+    <textarea class="form-control" id="description" name="description" required>
+      {{ $product->description }}
+    </textarea>
   </div>
 </div>
 
@@ -50,7 +53,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="price $" >Price ($)</label>
   <div class="col-md-4">                     
-    <input id="price" name="price" placeholder="PRICE" class="form-control input-md" required="" type="number" step="0.01" value="{{ old('price') }}">
+    <input id="price" name="price" placeholder="PRICE" class="form-control input-md" required="" type="number" step="0.01" value="{{ $product->price }}">
   </div>
 </div>
 
@@ -58,7 +61,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="percentage_discount">PERCENTAGE DISCOUNT (%)</label>  
   <div class="col-md-4">
-  <input id="percentage_discount" name="percentage_discount" placeholder="PERCENTAGE DISCOUNT" class="form-control input-md" required="" type="number" max="100" value="{{ old('percentage_discount') }}">
+  <input id="percentage_discount" name="percentage_discount" placeholder="PERCENTAGE DISCOUNT" class="form-control input-md" required="" type="number" max="100" value="{{ $product->percentage_discount }}">
     
   </div>
 </div>
@@ -67,7 +70,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="stock">STOCK</label>  
   <div class="col-md-4">
-  <input id="stock" name="stock" placeholder="STOCK" class="form-control input-md" required="" type="number" value="{{ old('stock') }}">
+  <input id="stock" name="stock" placeholder="STOCK" class="form-control input-md" required="" type="number" value="{{ $product->stock }}">
     
   </div>
 </div>
@@ -115,7 +118,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="singlebutton">Single Button</label>
   <div class="col-md-4">
-    <button id="singlebutton" name="singlebutton" class="btn btn-primary">ADD</button>
+    <button id="singlebutton" name="singlebutton" class="btn btn-primary">Save Change</button>
   </div>
   </div>
 

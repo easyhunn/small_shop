@@ -19,7 +19,7 @@ class CreateCartsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('status'); //1 -> in cart, 2-> on process, 0->on queue
+            $table->unsignedBigInteger('status'); //0->on queue, 1 -> in cart, 2-> on process, 3->finish
             $table->foreign('user_id')
                     ->references('id')
                     ->on('users')

@@ -73,7 +73,7 @@
                         </div>
 
                         <button class="btn btn-warning">Update</button> 
-                        <a href="{{ route('account.change-password') }}" class="float-right">Change password</a>
+                        <a href="{{ route('account.password') }}" class="float-right">Change password</a>
                         @if($errors->any())
                             @foreach($errors->all() as $error)
                                 {{ $error }}

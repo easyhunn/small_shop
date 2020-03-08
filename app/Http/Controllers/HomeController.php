@@ -27,9 +27,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        
+        //Auth::user()->roles()->sync(['1']);
         $catagories = Catagory::all();
-        $products = Product::where('enable_display',1)->orderBy('id', 'DESC')->paginate(4);
+        $products = Product::where('enable_display',1)
+                                ->where('stock', '>', 2)
+                                ->orderBy('id', 'DESC')
+                                ->paginate(4);
         return view('home', compact('products', 'catagories'));
     }
 }

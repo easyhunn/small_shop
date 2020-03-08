@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AuxiliaryCart;
 use App\Cart;
+use App\Product;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -49,21 +50,28 @@ class CartController extends Controller
                 'message' => 'please login...'
             ]);
         }
+
         $data = $request->validate([
             'productId' => 'required',
             'quantity'  => 'required',
         ]);
         $data['status'] = 1;
+        
+        $available = Product::where('id', $data['productId'])->first()->stock;
+        if($data['quantity'] > $available) 
+            return response()->json([
+                'message' => 'not enough product available: '.$available
+            ]);
 
         if($this->exist($data['productId'])) {
-            $oldQuantity = Auth::user()
+            $cart = Auth::user()
                             ->carts()
                             ->where('product_id', $data['productId'])
-                            ->first()
-                            ->quantity;
-
-            $quantity = $data['quantity'] + $oldQuantity;
+                            ->first();
+            $quantity = $data['quantity'] + $cart->quantity;
             $this->_update($data['productId'], $quantity);
+            $data['quantity'] = $quantity;
+            $this->resetStock($cart, $data);
         } else {
             $this->_create($data['quantity'], $data['productId']);
         }   
@@ -108,6 +116,10 @@ class CartController extends Controller
             'quantity' => 'required|min:0',
             'productId' => 'required',
         ]);
+        
+        //up date stock
+        $this->resetStock($cart, $data);
+        
         $this->_update($data['productId'], $data['quantity']);
 
     }
@@ -121,6 +133,11 @@ class CartController extends Controller
     public function destroy(Cart $cart)
     {
         //
+        $this->authorize('delete', $cart);
+        if($cart->status == 2) {
+            $product = Product::where('id', $cart->product_id);
+            $product->update(['stock' => $product->first()->stock + $cart->quantity]);  
+        }
         $cart->delete();
     }
 
@@ -159,13 +176,39 @@ class CartController extends Controller
     }
 
     function addToCart (Request $request, Cart $cart) {
-
+        //from safe for late to cart
         $cart->update(['status' => '1']);
         return redirect()->back();
     }
 
     function safeForLate (Cart $cart) {
+        //from cart to safe for late
         $cart->update(['status' => '0']);
         return redirect()->back();
     }
+
+    function resetStock (Cart $cart, $data) {
+        $cartQuantity = $data['quantity'] - $cart->quantity;
+        $product = Product::where('id', $cart->product_id);
+        $productQuantity = $product->first()->stock;
+        $quantity = $productQuantity - $cartQuantity;
+        if($quantity < 0) {
+            //request more than stock avaiable
+            return response()->json([
+                'message' => 'not enough available product. available: '. $productQuantity
+            ]);
+        }
+        if($cart->status == 2)
+            //on processing
+            $product->update(['stock' => $quantity]);
+    }
+    function all () {
+        $carts = Cart::where('status','>=', '2')->orderBy('updated_at')->paginate(10);
+       
+        return view('list.order', compact('carts')); 
+    }
+    function finish (Cart $cart) {
+        $cart->update(['status' => '3']);
+    }
+    
 }

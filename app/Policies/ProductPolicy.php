@@ -60,6 +60,11 @@ class ProductPolicy
     public function update(User $user, Product $product)
     {
         //
+        foreach($user->roles as $role) {
+            if(in_array($role->role, ['admin']))
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -72,6 +77,12 @@ class ProductPolicy
     public function delete(User $user, Product $product)
     {
         //
+
+        foreach($user->roles as $role) {
+            if(in_array($role->role, ['admin']))
+                return true;
+        }
+        
     }
 
     /**

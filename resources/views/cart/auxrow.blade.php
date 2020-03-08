@@ -7,7 +7,7 @@
 			<div class="row">
 				<div class="col-9">
 					<h5><a href="{{ $auxiliaryCart->product->public_path() }}">
-						{{ $auxiliaryCart->product->product_name }}
+						{{ $auxiliaryCart->product->name }}
 					</a></h5>
 				</div>
 				

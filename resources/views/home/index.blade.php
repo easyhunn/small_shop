@@ -23,6 +23,7 @@
                                 <img class="pic-1" src="{{ asset('storage/'.$product->image_source) }}">
                                 <img class="pic-2" src="{{ asset('storage/'.$product->auxiliary_image_source) }}">
                             </a>
+
                             <ul class="social">
                                 <li><a href="{{ $product->public_path() }}" data-tip="Quick View"><i class="fa fa-search"></i></a></li>
                                 <li><a href="" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
@@ -42,16 +43,37 @@
                             
                         </ul>
                         <div class="product-content">
-                            <h3 class="title"><a href="{{ $product->public_path()}}">{{ $product->product_name }}</a></h3>
+                            <h3 class="title">
+                                <a href="{{ $product->public_path()}}">{{ $product->name }}</a>
+                            </h3>
+
                             <div class="price">
                                 ${{ (int)(($product->price)*(100 - $product->percentage_discount)/100) }}
+                                
                                 @if($product->percentage_discount > 0)
                                 <span>${{ $product->price }}</span>
                                 @endif
                             </div>
-                            <a href="javascript:void(0);" class="add-to-cart" data-toggle="modal" data-target="#quantity{{ $product->id }}">+ Add To Cart</a>
-                                                       
+                            <a href="javascript:void(0);" class="add-to-cart" data-toggle="modal" data-target="#quantity{{ $product->id }}">+ Add To Cart</a>                                                       
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        <!--bottom button-->
+                        @can('delete',$product)
+                            <form action="{{ route('product.destroy', compact('product')) }}" method="post"
+                            onsubmit="return confirm('are u sure')">
+                                @method('delete')
+                                @csrf
+                                <button class="btn btn-danger mt-2">delete</button>
+                            </form>
+                        @endcan
+                        @can('update',$product)
+                            <form action="{{ route('product.edit', compact('product')) }}" method="get"
+                            class="ml-2">
+                             
+                                <button class="btn btn-info mt-2">edit</button>
+                            </form>
+                        @endcan
                     </div>
                 </div>
 
@@ -61,6 +83,7 @@
                 @endforeach
                 
             </div>
+
             {{ $products->links() }}
         </div>
         <hr>

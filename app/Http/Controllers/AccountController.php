@@ -18,10 +18,7 @@ class AccountController extends Controller
     	$data = request()->validate([
     		'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'max:255'],
-            'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
             'address' => ['required', 'string', 'max:255'],
-            'date_of_birth' => ['sometimes', 'date'],
-            'gender' => ['required', 'max:255'],
     	]);
     	Auth::user()->update($data);
     	return redirect()->back();

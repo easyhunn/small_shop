@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Process;
-use Illuminate\Http\Request;
+use App\Product;
 use Auth;
+use Illuminate\Http\Request;
 
 class ProcessController extends Controller
 {
@@ -20,7 +21,9 @@ class ProcessController extends Controller
     {
         //
         $user = Auth::user();
+
         $carts = $user->carts()->orderBy('id', 'DESC')->where('status', '2')->with('product')->get();
+        
         return view('process.index', compact('carts', 'user'));
     }
 
@@ -81,8 +84,13 @@ class ProcessController extends Controller
     public function update(Request $request)
     {   
         //
-        $carts = Auth::user()->carts()->where('status', '1')->update(['status'=> '2']);
-        
+        $carts = Auth::user()->carts()->where('status', '1');
+        foreach($carts->get() as $cart) {
+            $product = Product::where('id', $cart->product_id);
+            $product->update(['stock' => $product->first()->stock - $cart->quantity]);
+        }
+        $carts->update(['status'=> '2']);
+
         return redirect('/process');
     }
 

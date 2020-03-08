@@ -29,7 +29,7 @@ class Product extends Model
     }
 
     public function public_path () {
-    	return url('/product/'.$this->id."-".Str::slug($this->product_name));
+    	return url('/product/'.$this->id."-".Str::slug($this->name));
     }
 
 }

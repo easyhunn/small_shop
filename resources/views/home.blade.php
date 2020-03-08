@@ -11,7 +11,7 @@
             <div class="card">
 
                 <div class="card-body">
-                    @include('home.main-index')
+                    @include('home.index')
                     
                 </div>
             </div>

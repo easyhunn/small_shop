@@ -43,7 +43,7 @@
                         </div>
                         
                         <button class="">Update</button> 
-                        
+                        <button type="button" class="btn-warning" onclick="continues()">continue</button>
                         <!--any error-->
                         @if($errors->any())
                             @foreach($errors->all() as $error)
@@ -51,16 +51,21 @@
                             @endforeach
                         @endif   
                     </form>
-                    <form action="{{ route('process.update') }}" method="post">
+                    
+                    <form action="{{ route('process.update') }}" method="post" id="continueProcess">
                         @method('patch')
                         @csrf
-                        <button class="btn btn-warning">continue</button>
+                        
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function continues() {
+        document.getElementById('continueProcess').submit();
+    }
+</script>
 @endsection
 

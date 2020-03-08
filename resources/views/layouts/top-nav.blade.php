@@ -15,6 +15,9 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ route('process.index') }}">Process</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('cart.all') }}">Check out</a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown
@@ -49,8 +52,9 @@
           success: function(result) {
 
               for (i in result) {
-                let recommend = result[i].product_name;
+                let recommend = result[i].name;
                 if(recommend.includes(keyWord)) {
+
                   addRecommendProduct(recommend);
                 }
               }
@@ -69,6 +73,7 @@
         return false;
     }
     function addRecommendProduct(recommend) {
+
         if(existRecommend(recommend))
           return;
         let list = document.getElementById("allProduct");

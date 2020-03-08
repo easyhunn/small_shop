@@ -7,7 +7,7 @@
 			<div class="row">
 				<div class="col-9">
 					<h5><a href="{{ $cart->product->public_path() }}">
-						{{ $cart->product->product_name }}
+						{{ $cart->product->name }}
 					</a></h5>
 				</div>
 				
@@ -58,16 +58,7 @@
 			</div>
 			<div class="row mt-2">
 				<div class="col-12 d-flex justify-content-start">
-					<a href="javascript:void(0);"
-							onclick="deleteRow({{ $cart->id }})" 
-							class="border-left pl-3">
-						Delete
-					</a>
-					<form action="{{ route('cart.safe-for-late', compact('cart')) }}" method="post">
-						@method('patch')
-						@csrf
-						<a onclick="this.closest('form').submit();return false;" href="#" class="border-left pl-3 ml-3">Save for later</a>
-					</form>
+			
 					
 				</div>
 			</div>
