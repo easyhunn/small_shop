@@ -59,7 +59,7 @@ Route::delete('/cart/{cart}', 'CartController@destroy')->name('cart.destroy');
 Route::get('/account/', 'AccountController@show')->name('account.show');
 Route::get('/account/change-password', 'AccountController@changePassword')->name('account.change-password');
 Route::get('/process/create', 'ProcessController@create')->name('process.create');
-Route::get('/process', 'ProcessController@index')->name('process.index');
+Route::get('/process/{user}', 'ProcessController@index')->name('process.index');
 Route::patch('/account', 'AccountController@update')->name('account.update');
 Route::patch('/account/update-password', 'AccountController@updatePassWord')->name('account.update-password');
 Route::patch('/process', 'ProcessController@update')->name('process.update');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AuxiliaryCart;
 use App\Cart;
 use App\Product;
+use App\User;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -57,13 +58,22 @@ class CartController extends Controller
         ]);
         $data['status'] = 1;
         
+        //check avaiable quantity
         $available = Product::where('id', $data['productId'])->first()->stock;
         if($data['quantity'] > $available) 
             return response()->json([
                 'message' => 'not enough product available: '.$available
             ]);
 
-        if($this->exist($data['productId'])) {
+        //case update
+        $status = Auth::user()
+                        ->carts()
+                        ->where('product_id', $data['productId'])
+                        ->orderBy('updated_at', 'DESC')
+                        ->first()
+                        ->status;
+        
+        if($this->exist($data['productId']) && $status <= 2) {
             $cart = Auth::user()
                             ->carts()
                             ->where('product_id', $data['productId'])
@@ -203,12 +213,19 @@ class CartController extends Controller
             $product->update(['stock' => $quantity]);
     }
     function all () {
-        $carts = Cart::where('status','>=', '2')->orderBy('updated_at')->paginate(10);
+        $this->authorize('viewAny', Cart::class);
+        $users = User::all();
+        $carts = Cart::where('status','>=', '2')
+                    ->whereHas('user', function ($query) {
+                        $query->where('name', 'like', '%'.(request()->name ?? '').'%');
+                    })
+                    ->orderBy('updated_at','DESC')
+                    ->paginate(20);
        
-        return view('list.order', compact('carts')); 
+        return view('list.order', compact('carts', 'users')); 
     }
     function finish (Cart $cart) {
         $cart->update(['status' => '3']);
     }
-    
+
 }

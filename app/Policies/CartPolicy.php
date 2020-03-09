@@ -19,6 +19,10 @@ class CartPolicy
     public function viewAny(User $user)
     {
         //
+        foreach($user->roles as $role) {
+            if(in_array($role->role, ['admin']))
+                return true;
+        }
     }
 
     /**
@@ -31,6 +35,19 @@ class CartPolicy
     public function view(User $user, Cart $cart)
     {
         //
+        return true;
+
+    }
+    public function viewProcess(User $user, $id)
+    {
+        //
+        return true;
+        foreach($user->roles as $role) {
+            if(in_array($role->role, ['admin']))
+                return true;
+        }
+        if ($user->id == $id)
+            return true;
     }
 
     /**
@@ -66,7 +83,7 @@ class CartPolicy
     public function delete(User $user, Cart $cart)
     {
         //
-       
+
         if($cart->status != 2)
             return true;
         foreach($user->roles as $role) {

@@ -17,5 +17,23 @@ class Cart extends Model
     function product () {
     	return $this->belongsTo(Product::class);
     }
-
+    function getStatus () {
+    	switch ($this->status) {
+    		case 0:
+    			return 'in queue';
+    			break;
+    		case 1:
+    			return 'in cart';
+    			break;
+    		case 2:
+    			return 'in processing';
+    			break;
+    		default:
+    			return 'finish';
+    			break;
+    	}
+    }
+    function process_patch () {
+    	return url('process/'.Auth::user()->id);
+    }
 }

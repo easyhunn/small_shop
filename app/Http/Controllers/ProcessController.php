@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Cart;
 use App\Process;
 use App\Product;
+use App\User;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -17,11 +19,10 @@ class ProcessController extends Controller
     function __construct() {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(User $user)
     {
         //
-        $user = Auth::user();
-
+        $this->authorize('view', $user);
         $carts = $user->carts()->orderBy('id', 'DESC')->where('status', '2')->with('product')->get();
         
         return view('process.index', compact('carts', 'user'));

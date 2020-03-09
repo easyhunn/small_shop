@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-expand-lg navbar-light col-10">
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ">
@@ -13,69 +14,52 @@
         <a class="nav-link" href="{{ route('cart.index') }}">Cart</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ route('process.index') }}">Process</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ route('cart.all') }}">Check out</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
+            <a class="nav-link" href="/process/{{ Auth::user()->id }}">Process</a>
+          </li>
+      @can('viewAny', App\Cart::class)
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('cart.all') }}">Order manage</a>
+        </li>
+      @endcan
+      
+    
       
     </ul>
     <form class="form-inline my-2 my-lg-0 col-6" action="/product/search" method="get">
-      <input class="form-control col-12" list="allProduct" name="data" type="search" placeholder="Search" aria-label="Search" oninput="getProduct()" id="topSearch" value="{{ old('data') }}">
+      <input class="form-control col-12" list="allProduct" name="data" type="search" placeholder="Search" aria-label="Search" id="topSearch" value="{{ old('data') }}">
       <datalist id="allProduct"></datalist>
     </form>
   </div>
 
 </nav>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
     let recommends = [];
     let recommendIndex = 0;
 
     function getProduct() {
-        let keyWord = document.getElementById("topSearch").value;
-
+        try{
         $.ajax({
           url:"/product/getAll",
           type:"get",
           success: function(result) {
 
               for (i in result) {
-                let recommend = result[i].name;
-                if(recommend.includes(keyWord)) {
 
-                  addRecommendProduct(recommend);
-                }
+                addRecommendProduct(result[i].name);    
               }
           },
           error: function (result) {
             alert(result.status + ": " +result.responseJSON.message);
           }
         })
-    }
-    function existRecommend(recommend) {
-        for(i in recommends) {
-          if(recommends[i] == recommend) {
-            return true;
-          }
+        } catch (e) {
+          alert(e);
         }
-        return false;
     }
+
     function addRecommendProduct(recommend) {
 
-        if(existRecommend(recommend))
-          return;
         let list = document.getElementById("allProduct");
         let option = document.createElement("option");
         option.setAttribute("value", recommend);
@@ -83,6 +67,7 @@
         recommends[recommendIndex] = recommend;
         recommendIndex++;
     }
-   
+
+    getProduct();
 </script>
 

@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Cart;
 use App\Policies\CartPolicy;
 use App\Policies\ProductPolicy;
+use App\Policies\UserPolicy;
 use App\Product;
+use App\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -20,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Model' => 'App\Policies\ModelPolicy',
         Product::class => ProductPolicy::class,
         Cart::class => CartPolicy::class,
+        User::class => UserPolicy::class
     ];
 
     /**

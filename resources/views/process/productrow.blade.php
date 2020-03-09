@@ -59,7 +59,7 @@
 			<div class="row mt-2">
 				<div class="col-12 d-flex justify-content-start">
 			
-					
+					<span class="font-italic">updated at: {{ $cart->updated_at }}</span>
 				</div>
 			</div>
 		</div>

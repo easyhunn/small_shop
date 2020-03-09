@@ -11,8 +11,14 @@
 <body>
     <a href="{{ route('home') }}" class="btn btn-link">Back</a>
     <div class="nav p-1 mb-3 d-flex justify-content-xl-center">
-        <form action="">
-            <input type="text" placeholder="Search by Name" class="form-control col-6 display-3">
+        <form action="{{ route('cart.all') }}" method="get" class="col-6">
+            <input type="text" placeholder="Search by Name" name="name" class="form-control" list="customer">
+            <datalist id="customer">
+               
+                @foreach($users as $user)
+                    <option value="{{ $user->name }}">  
+                @endforeach
+            </datalist>
         </form>
     </div>
 
@@ -26,9 +32,10 @@
             </div>
             @foreach($carts as $cart)
                 <div class="row" id="row{{ $cart->id }}">
-                    <div class="col-3">{{ $cart->user->name }}</div>
-                    <div class="col-6">{{ $cart->product->name }}</div>
+                    
                     @if($cart->status > 2)
+                        <div class="col-3 text-muted">{{ $cart->user->name }}</div>
+                        <div class="col-6 text-muted">{{ $cart->product->name }}</div>
                         <div class="col-2 text-muted" id="status{{ $cart->id }}">
                             finished
                         </div>
@@ -40,7 +47,15 @@
                             </button>
                         </div>
                     @else
-                    <div class="col-2 text-success" id="status{{ $cart->id }}">
+                        <div class="col-3">
+                            <a href="\process\{{ $cart->user->id }}">{{ $cart->user->name }}</a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ $cart->product->public_path() }}">
+                                {{ $cart->product->name }}
+                            </a>
+                        </div>
+                        <div class="col-2 text-success" id="status{{ $cart->id }}">
                             on processing
                         </div>
                         <div class="col-1">

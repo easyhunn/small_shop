@@ -30,6 +30,12 @@ class UserPolicy
     public function view(User $user, User $model)
     {
         //
+        if($user->id == $model->id)
+            return true;
+        foreach($user->roles as $role) {
+            if (in_array($role->role, ['admin']))
+                return true;
+        }
     }
 
     /**
